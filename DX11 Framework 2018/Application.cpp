@@ -69,7 +69,7 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	XMStoreFloat4x4(&_world, XMMatrixIdentity());
 
     // Initialize the view matrix
-	XMVECTOR Eye = XMVectorSet(0.0f, 0.0f, -3.0f, 0.0f);
+	XMVECTOR Eye = XMVectorSet(0.0f, 0.0f, -4.5f, 0.0f);
 	XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
@@ -471,19 +471,27 @@ void Application::Update()
     XMStoreFloat4x4(&_world2, XMMatrixRotationZ(t) * XMMatrixTranslation(3.0f, 0.0f, 0.0f));*/
 
     //Scene object creation
-    sceneObjects.resize(3);
+    sceneObjects.resize(5);
 
     XMMATRIX sol = XMMatrixIdentity();
-    sol = XMMatrixMultiply(sol, XMMatrixScaling(0.5, 0.5, 0.5) * XMMatrixTranslation(0, 0, 0) * XMMatrixRotationRollPitchYaw(t * 1, t * 0.5, 0));
+    sol = XMMatrixMultiply(sol, XMMatrixScaling(0.7, 0.7, 0.7) * XMMatrixTranslation(0, 0, 0) * XMMatrixRotationRollPitchYaw(t * 1, t * 0.5, 0));
     XMStoreFloat4x4(&sceneObjects[0], sol);
 
     XMMATRIX planet1 = XMMatrixIdentity();
     planet1 = XMMatrixMultiply(planet1, XMMatrixScaling(0.25, 0.25, 0.25) * XMMatrixTranslation(1.5, 0, 0) * XMMatrixRotationRollPitchYaw(0, t * 1, 0));
     XMStoreFloat4x4(&sceneObjects[1], planet1);
 
+    XMMATRIX planet2 = XMMatrixIdentity();
+    planet2 = XMMatrixMultiply(planet2, XMMatrixScaling(0.3, 0.3, 0.3) * XMMatrixTranslation(3, 0, 0) * XMMatrixRotationRollPitchYaw(t * 0.5, t * 1.4, 0));
+    XMStoreFloat4x4(&sceneObjects[3], planet2);
+
     XMMATRIX planet1_moon = XMMatrixIdentity();
     planet1_moon = XMMatrixMultiply(planet1_moon, XMMatrixTranslation(5.5, 0, 0) * XMMatrixScaling(0.1, 0.1, 0.1) * XMMatrixRotationRollPitchYaw(0, t * 2, 0) * XMMatrixRotationRollPitchYaw(0, t * 1, 0) * XMMatrixTranslation(1.5, 0, 0) * XMMatrixRotationRollPitchYaw(0, t * 1, 0));
     XMStoreFloat4x4(&sceneObjects[2], planet1_moon);
+
+    XMMATRIX planet2_moon = XMMatrixIdentity();
+    planet2_moon = XMMatrixMultiply(planet2_moon, XMMatrixTranslation(5.5, 0, 0) * XMMatrixScaling(0.1, 0.1, 0.1) * XMMatrixRotationRollPitchYaw(0, t * 2, 0) * XMMatrixRotationRollPitchYaw(0, t * 1, 0) * XMMatrixTranslation(1.5, 0, 0) * XMMatrixRotationRollPitchYaw(0, t * 1, 0));
+    XMStoreFloat4x4(&sceneObjects[4], planet2_moon);
 
 
 }
@@ -529,22 +537,36 @@ void Application::Draw()
     //_pImmediateContext->DrawIndexed(36, 0, 0);*/
 
 
-   
+   //Sol
     world = XMLoadFloat4x4(&sceneObjects[0]);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
     _pImmediateContext->DrawIndexed(36, 0, 0); 
 
-
+    //Planet1
     world = XMLoadFloat4x4(&sceneObjects[1]);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
     _pImmediateContext->DrawIndexed(36, 0, 0);
 
+    //Moon1
     world = XMLoadFloat4x4(&sceneObjects[2]);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
     _pImmediateContext->DrawIndexed(36, 0, 0);
+
+    //Planet2
+    world = XMLoadFloat4x4(&sceneObjects[3]);
+    cb.mWorld = XMMatrixTranspose(world);
+    _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
+    _pImmediateContext->DrawIndexed(36, 0, 0);
+
+    //Moon2
+    world = XMLoadFloat4x4(&sceneObjects[4]);
+    cb.mWorld = XMMatrixTranspose(world);
+    _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
+    _pImmediateContext->DrawIndexed(36, 0, 0);
+
     //
     // Present our back buffer to our front buffer
     //

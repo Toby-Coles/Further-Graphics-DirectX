@@ -9,6 +9,8 @@
 #include <vector>
 
 
+
+
 using namespace DirectX;
 
 struct SimpleVertex
@@ -38,14 +40,20 @@ private:
 	ID3D11VertexShader*     _pVertexShader;
 	ID3D11PixelShader*      _pPixelShader;
 	ID3D11InputLayout*      _pVertexLayout;
-	ID3D11Buffer*           _pVertexBuffer;
-	ID3D11Buffer*           _pIndexBuffer;
+	ID3D11Buffer*           _pVertexBufferCube;
+	ID3D11Buffer*           _pIndexBufferCube;
+	ID3D11Buffer*			_pVertexBufferPyramid;
+	ID3D11Buffer*			_pIndexBufferPyramid;
 	ID3D11Buffer*           _pConstantBuffer;
 	XMFLOAT4X4              _world;
 	XMFLOAT4X4				_world2;
 	XMFLOAT4X4              _view;
 	XMFLOAT4X4              _projection;
 
+	bool cubeView;
+	bool pyramidView;
+
+	 
 	//Depth buffer variables
 	ID3D11DepthStencilView* _depthStencilView;
 	ID3D11Texture2D* _depthStencilBuffer;
@@ -53,6 +61,11 @@ private:
 
 	//Scene Objects
 	std::vector<XMFLOAT4X4> sceneObjects;
+	std::vector<XMFLOAT4X4> asteroidBelt;
+
+
+	//Wireframe
+	ID3D11RasterizerState* _wireFrame;
 
 
 private:
@@ -67,6 +80,11 @@ private:
 
 	UINT _WindowHeight;
 	UINT _WindowWidth;
+
+	float keyPressTimer;
+	float keyCoolDown;
+	bool wireFrame;
+
 
 public:
 	Application();

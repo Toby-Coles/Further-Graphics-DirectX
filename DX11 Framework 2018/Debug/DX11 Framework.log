@@ -1,8 +1,39 @@
 ﻿  Application.cpp
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(221,13): warning C4101: 'hrFloorPlain': unreferenced local variable
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(570,135): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(574,141): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(578,145): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(578,136): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(586,270): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(285,36): warning C4244: '=': conversion from 'UINT' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=WORD
+          ]
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(286,44): warning C4244: '=': conversion from 'UINT' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=WORD
+          ]
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(287,46): warning C4244: '=': conversion from 'UINT' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=WORD
+          ]
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(288,46): warning C4244: '=': conversion from 'UINT' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=WORD
+          ]
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(289,44): warning C4244: '=': conversion from 'UINT' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=WORD
+          ]
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(290,50): warning C4244: '=': conversion from 'UINT' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=WORD
+          ]
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(242,11): warning C4189: 'du': local variable is initialized but not referenced
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(243,11): warning C4189: 'dv': local variable is initialized but not referenced
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(631,135): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(635,141): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(639,145): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(639,136): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(647,270): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   DX11 Framework.vcxproj -> C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Debug\DX11 Framework.exe

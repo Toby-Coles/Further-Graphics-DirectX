@@ -15,8 +15,10 @@ using namespace DirectX;
 
 struct SimpleVertex
 {
-    XMFLOAT3 Pos;
-    XMFLOAT4 Color;
+	
+    XMVECTOR3 Pos;
+    //XMFLOAT4 Color;
+	XMFLOAT3 Normal; 
 };
 
 struct ConstantBuffer
@@ -44,6 +46,8 @@ private:
 	ID3D11Buffer*           _pIndexBufferCube;
 	ID3D11Buffer*			_pVertexBufferPyramid;
 	ID3D11Buffer*			_pIndexBufferPyramid;
+	ID3D11Buffer*			_pVertexBufferGrid;
+	ID3D11Buffer*			_pIndexBufferGrid;
 	ID3D11Buffer*           _pConstantBuffer;
 	XMFLOAT4X4              _world;
 	XMFLOAT4X4				_world2;
@@ -53,6 +57,8 @@ private:
 	bool cubeView;
 	bool pyramidView;
 
+	void GenerateGridPlain(float width, float depth, UINT m, UINT n);
+	XMFLOAT3 CalculateNormals(XMFLOAT3 vertex1, XMFLOAT3 vertex2, XMFLOAT3 vertex3);
 	 
 	//Depth buffer variables
 	ID3D11DepthStencilView* _depthStencilView;
@@ -62,6 +68,7 @@ private:
 	//Scene Objects
 	std::vector<XMFLOAT4X4> sceneObjects;
 	std::vector<XMFLOAT4X4> asteroidBelt;
+	XMFLOAT4X4 gridPlane;
 
 
 	//Wireframe

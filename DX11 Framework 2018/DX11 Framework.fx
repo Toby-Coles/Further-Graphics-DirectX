@@ -23,6 +23,9 @@ cbuffer ConstantBuffer : register( b0 )
     //I.e, in the opposite direction of the incoming light rays (XYZ)
     float3 LightVecW;
 
+    float4 AmbientLight;
+    float4 AmbientMtrl;
+
 }
 
 //--------------------------------------------------------------------------------------
@@ -66,10 +69,12 @@ float4 PS( VS_OUTPUT input ) : SV_Target
     float3 normalW = mul(float4(input.Norm, 0.0f), World).xyz;
     normalW = normalize(normalW);
 
+    //Ambient
+    float3 ambient = AmbientMtrl * AmbientLight;
     float4 endColour;
     // Compute Colour using Diffuse lighting only
     float diffuseAmount = max(dot(LightVecW, normalW), 0.0f);
-    endColour.rgb = diffuseAmount * (DiffuseMtrl * DiffuseLight).rgb;
+    endColour.rgb = diffuseAmount * (DiffuseMtrl * DiffuseLight).rgb + ambient;
     endColour.a = DiffuseMtrl.a;
 
     return endColour;

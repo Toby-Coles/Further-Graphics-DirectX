@@ -101,6 +101,9 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	//Diffuse Light Colour (RGBA)
 	diffuseLight = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 
+	ambientLight = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
+	ambientMateral = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+
 
 
 	return S_OK;
@@ -220,7 +223,7 @@ HRESULT Application::InitVertexBuffer()
 
 	HRESULT hrCube;
 	SimpleVertex verticesCube[] = {
-		{XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT3(-1.0f, -1.0f, -1.0f)},
+	/*	{XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT3(-1.0f, -1.0f, -1.0f)},
 		{XMFLOAT3(1.0f,-1.0f, -1.0f),  XMFLOAT3(1.0f,-1.0f, -1.0f) },
 		{ XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT3(-1.0f, 1.0f, -1.0f) },
 		{ XMFLOAT3(1.0f, 1.0f, -1.0f),  XMFLOAT3(1.0f, 1.0f, -1.0f) },
@@ -228,8 +231,43 @@ HRESULT Application::InitVertexBuffer()
 		{ XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT3(-1.0f, -1.0f, 1.0f) },
 		{ XMFLOAT3(1.0f, -1.0f, 1.0f),  XMFLOAT3(1.0f, -1.0f, 1.0f) },
 		{ XMFLOAT3(-1.0f, 1.0f, 1.0f),   XMFLOAT3(-1.0f, 1.0f, 1.0f)},
-		{XMFLOAT3(1.0f, 1.0f, 1.0f),    XMFLOAT3(1.0f, 1.0f, 1.0f)},
-
+		{XMFLOAT3(1.0f, 1.0f, 1.0f),    XMFLOAT3(1.0f, 1.0f, 1.0f)},*/
+			{ XMFLOAT3(-1.0,  1.0, -1.0),		XMFLOAT3(0.0,  0.0, -1.0)},	//Top Back Left
+		{ XMFLOAT3(1.0,  1.0, -1.0),		XMFLOAT3(0.0,  0.0, -1.0)},		//Top Back Right
+		{ XMFLOAT3(-1.0, -1.0, -1.0),		XMFLOAT3(0.0,  0.0, -1.0)},		//Bottom Back Left
+		{ XMFLOAT3(-1.0, -1.0, -1.0),		XMFLOAT3(0.0,  0.0, -1.0)},		//Bottom Back Left
+		{ XMFLOAT3(1.0,  1.0, -1.0),		XMFLOAT3(0.0,  0.0, -1.0)},		//Top Back Right
+		{ XMFLOAT3(1.0, -1.0, -1.0),		XMFLOAT3(0.0,  0.0, -1.0)},		//Bottom Back Left
+		{ XMFLOAT3(1.0,  1.0, -1.0),		XMFLOAT3(1.0,  0.0,  0.0)},		//Top Back Right
+		{ XMFLOAT3(1.0,  1.0,  1.0),		XMFLOAT3(1.0,  0.0,  0.0)},		//Top Front Right
+		{ XMFLOAT3(1.0, -1.0, -1.0),		XMFLOAT3(1.0,  0.0,  0.0)},		//Bottom Back Right
+		{ XMFLOAT3(1.0, -1.0, -1.0),		XMFLOAT3(1.0,  0.0,  0.0)},		//Top Back Right
+		{ XMFLOAT3(1.0,  1.0,  1.0),		XMFLOAT3(1.0,  0.0,  0.0)},		//Top Front Right
+		{ XMFLOAT3(1.0, -1.0,  1.0),		XMFLOAT3(1.0,  0.0,  0.0)},		//Bottom Front Right
+		{ XMFLOAT3(1.0,  1.0,  1.0),		XMFLOAT3(0.0,  0.0,  1.0)},		//Top Front Right
+		{ XMFLOAT3(-1.0,  1.0,  1.0),		XMFLOAT3(0.0,  0.0,  1.0)},		//Top Front Left
+		{ XMFLOAT3(1.0, -1.0,  1.0),		XMFLOAT3(0.0,  0.0,  1.0)},		//Bottom Front Right
+		{ XMFLOAT3(1.0, -1.0,  1.0),		XMFLOAT3(0.0,  0.0,  1.0)},		//Bottom Front Right
+		{ XMFLOAT3(-1.0,  1.0,  1.0),		XMFLOAT3(0.0,  0.0,  1.0)},		//Top Front Left
+		{ XMFLOAT3(-1.0, -1.0,  1.0),		XMFLOAT3(0.0,  0.0,  1.0)},		//Bottom Front Left
+		{ XMFLOAT3(-1.0,  1.0,  1.0),		XMFLOAT3(-1.0,  0.0,  0.0)},		//Top Front Left
+		{ XMFLOAT3(-1.0,  1.0, -1.0),		XMFLOAT3(-1.0,  0.0,  0.0)},		//Top Back Left
+		{ XMFLOAT3(-1.0, -1.0,  1.0),		XMFLOAT3(-1.0,  0.0,  0.0)},		//Bottom Front Left
+		{ XMFLOAT3(-1.0, -1.0,  1.0),		XMFLOAT3(-1.0,  0.0,  0.0)},		//Bottom Front Left
+		{ XMFLOAT3(-1.0,  1.0, -1.0),		XMFLOAT3(-1.0,  0.0,  0.0)},		//Top Back Left
+		{ XMFLOAT3(-1.0, -1.0, -1.0),		XMFLOAT3(-1.0,  0.0,  0.0)},		//Bottom Back Left
+		{ XMFLOAT3(-1.0,  1.0,  1.0),		XMFLOAT3(0.0,  1.0,  0.0)},		//Top Front Left
+		{ XMFLOAT3(1.0,  1.0,  1.0),		XMFLOAT3(0.0,  1.0,  0.0)},		//Top Front Right
+		{ XMFLOAT3(-1.0,  1.0, -1.0),		XMFLOAT3(0.0,  1.0,  0.0)},		//Top Back Left
+		{ XMFLOAT3(-1.0,  1.0, -1.0),		XMFLOAT3(0.0,  1.0,  0.0)},		//Top Back Left
+		{ XMFLOAT3(1.0,  1.0,  1.0),		XMFLOAT3(0.0,  1.0,  0.0)},		//Top Front Right
+		{ XMFLOAT3(1.0,  1.0, -1.0),		XMFLOAT3(0.0,  1.0,  0.0)},		//Top Back Left
+		{ XMFLOAT3(-1.0, -1.0, -1.0),		XMFLOAT3(0.0, -1.0,  0.0)},		//Bottom Back Left
+		{ XMFLOAT3(1.0, -1.0, -1.0),		XMFLOAT3(0.0, -1.0,  0.0)},		//Bottom Back Right
+		{ XMFLOAT3(-1.0, -1.0,  1.0),		XMFLOAT3(0.0, -1.0,  0.0)},		//Bottom Front Left
+		{ XMFLOAT3(-1.0, -1.0,  1.0),		XMFLOAT3(0.0, -1.0,  0.0)},		//Bottom Front Left
+		{ XMFLOAT3(1.0, -1.0, -1.0),		XMFLOAT3(0.0, -1.0,  0.0)},		//Bottom Back Right
+		{ XMFLOAT3(1.0, -1.0,  1.0),		XMFLOAT3(0.0, -1.0,  0.0)},		//Bottom Front Right
 
 
 
@@ -384,18 +422,12 @@ HRESULT Application::InitIndexBuffer()
 	// Create index buffer for Cube
 	WORD indicesCube[] =
 	{
-		0, 2, 1,    // side 1
-		2, 3, 1,
-		1, 3, 5,    // side 2
-		3, 7, 5,
-		2, 6, 3,    // side 3
-		3, 6, 7,
-		4, 5, 7,    // side 4
-		4, 7, 6,
-		0, 4, 2,    // side 5
-		2, 4, 6,
-		0, 1, 4,    // side 6
-		1, 5, 4,
+		0,1,2 ,3,4,5,
+		6,7,8 ,9,10,11,
+		12,13,14 ,15,16,17,
+		18,19,20 ,21,22,23,
+		24,25,26 ,27,28,29,
+		30,31,32 ,33,34,35
 	};
 
 	D3D11_BUFFER_DESC bdCube;
@@ -792,7 +824,8 @@ void Application::Draw()
 	cb.DiffuseMtrl = diffuseMaterial;
 	cb.DiffuseLight = diffuseLight;
 	cb.LightVecW = lightDirection;
-
+	cb.AmbientLight = ambientLight;
+	cb.AmbientMtrl = ambientMateral;
 
 
 	//_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);

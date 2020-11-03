@@ -31,6 +31,10 @@ struct ConstantBuffer
 	XMFLOAT4 DiffuseLight;
 	XMFLOAT3 LightVecW;
 
+	XMFLOAT4 AmbientLight;
+	XMFLOAT4 AmbientMtrl;
+
+
 };
 
 class Application
@@ -63,6 +67,8 @@ private:
 	XMFLOAT4 diffuseMaterial;
 	XMFLOAT4 diffuseLight;
 
+	XMFLOAT4 ambientLight;
+	XMFLOAT4 ambientMateral;
 
 	bool cubeView;
 	bool pyramidView;

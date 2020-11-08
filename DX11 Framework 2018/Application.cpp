@@ -89,6 +89,7 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	// Initialize the projection matrix
 	XMStoreFloat4x4(&_projection, XMMatrixPerspectiveFovLH(XM_PIDIV2, _WindowWidth / (FLOAT)_WindowHeight, 0.01f, 100.0f));
 
+	EyePosW = XMFLOAT3(0.0f, 0.0f, -4.5);
 
 	//Initialise Lighting
 
@@ -106,9 +107,9 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	ambientMateral = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 
 	//Specular Light
-	specularLight = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	specularMaterial = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	specularPower = 1.0f;
+	specularLight = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	specularMaterial = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
+	specularPower = 10.0f;
 
 	return S_OK;
 }
@@ -227,16 +228,8 @@ HRESULT Application::InitVertexBuffer()
 
 	HRESULT hrCube;
 	SimpleVertex verticesCube[] = {
-	/*	{XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT3(-1.0f, -1.0f, -1.0f)},
-		{XMFLOAT3(1.0f,-1.0f, -1.0f),  XMFLOAT3(1.0f,-1.0f, -1.0f) },
-		{ XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT3(-1.0f, 1.0f, -1.0f) },
-		{ XMFLOAT3(1.0f, 1.0f, -1.0f),  XMFLOAT3(1.0f, 1.0f, -1.0f) },
-
-		{ XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT3(-1.0f, -1.0f, 1.0f) },
-		{ XMFLOAT3(1.0f, -1.0f, 1.0f),  XMFLOAT3(1.0f, -1.0f, 1.0f) },
-		{ XMFLOAT3(-1.0f, 1.0f, 1.0f),   XMFLOAT3(-1.0f, 1.0f, 1.0f)},
-		{XMFLOAT3(1.0f, 1.0f, 1.0f),    XMFLOAT3(1.0f, 1.0f, 1.0f)},*/
-			{ XMFLOAT3(-1.0,  1.0, -1.0),		XMFLOAT3(0.0,  0.0, -1.0)},	//Top Back Left
+	
+		{ XMFLOAT3(-1.0,  1.0, -1.0),		XMFLOAT3(0.0,  0.0, -1.0)},	//Top Back Left
 		{ XMFLOAT3(1.0,  1.0, -1.0),		XMFLOAT3(0.0,  0.0, -1.0)},		//Top Back Right
 		{ XMFLOAT3(-1.0, -1.0, -1.0),		XMFLOAT3(0.0,  0.0, -1.0)},		//Bottom Back Left
 		{ XMFLOAT3(-1.0, -1.0, -1.0),		XMFLOAT3(0.0,  0.0, -1.0)},		//Bottom Back Left
@@ -275,14 +268,6 @@ HRESULT Application::InitVertexBuffer()
 
 
 
-		//Triangle1
-		// XMFLOAT3(CalculateNormals(XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT3(1.0f,-1.0f, -1.0f), XMFLOAT3(-1.0f, 1.0f, -1.0f)))}
-		//Triangle2
-		// XMFLOAT3(CalculateNormals(XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT3(1.0f, 1.0f, -1.0f))) }
-		//Triangle3
-		//XMFLOAT3(CalculateNormals(XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT3(-1.0f, 1.0f, 1.0f)))},
-		//Triangle4
-		// XMFLOAT3(CalculateNormals(XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT3(1.0f, 1.0f, 1.0f)))},
 	};
 
 	D3D11_BUFFER_DESC bdCube;
@@ -831,6 +816,9 @@ void Application::Draw()
 	cb.AmbientLight = ambientLight;
 	cb.AmbientMtrl = ambientMateral;
 	cb.SpecularMtrl = specularMaterial;
+	cb.SpecularLight = specularLight;
+	cb.SpecularPower = specularPower;
+	cb.EyePosW = EyePosW; 
 
 	//_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 

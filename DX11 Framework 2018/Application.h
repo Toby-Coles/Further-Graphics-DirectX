@@ -30,6 +30,7 @@ struct ConstantBuffer
 	XMFLOAT4 DiffuseMtrl;
 	XMFLOAT4 DiffuseLight;
 	XMFLOAT3 LightVecW;
+	float dataBreak;
 
 	XMFLOAT4 AmbientLight;
 	XMFLOAT4 AmbientMtrl;

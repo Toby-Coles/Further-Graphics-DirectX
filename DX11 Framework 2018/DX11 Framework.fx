@@ -23,6 +23,8 @@ cbuffer ConstantBuffer : register( b0 )
     //I.e, in the opposite direction of the incoming light rays (XYZ)
     float3 LightVecW;
 
+    float dataBreak;
+
     //Ambient Lighting 
     float4 AmbientLight;
     float4 AmbientMtrl;
@@ -43,6 +45,7 @@ struct VS_OUTPUT
     float4 Pos : SV_POSITION;
     //float4 Color : COLOR0;
     float3 Norm: NORMAL;
+    float3 Posw : POSITION;
    // float3 PosW : POSITION;
 };
 
@@ -75,15 +78,29 @@ float4 PS( VS_OUTPUT input ) : SV_Target
 {
      // Convert from local space to world space 
     // W component of vector is 0 as vectors cannot be translated
+
     float3 normalW = mul(float4(input.Norm, 0.0f), World).xyz;
+
     normalW = normalize(normalW);
+
+    float3 toEye = normalize(EyePosW - input.Pos.xyz);
 
     //Ambient
     float3 ambient = AmbientMtrl * AmbientLight;
     float4 endColour;
-    // Compute Colour using Diffuse lighting only
+    
+    //Specular
+    float3 r = reflect(-LightVecW, normalW);
+    float specularAmount = pow(max(dot(r, toEye), 0.0f), SpecularPower);
+
+   
+    // Compute Colour using Diffuse and ambient lighting
     float diffuseAmount = max(dot(LightVecW, normalW), 0.0f);
-    endColour.rgb = diffuseAmount * (DiffuseMtrl * DiffuseLight).rgb + ambient;
+
+    float3 diffuse = diffuseAmount * (DiffuseMtrl * DiffuseLight).rgb;
+    float3 specular = specularAmount * (SpecularMtrl * SpecularLight).rgb;
+
+    endColour.rgb = ambient + diffuse + specular;
     endColour.a = DiffuseMtrl.a;
 
     return endColour;

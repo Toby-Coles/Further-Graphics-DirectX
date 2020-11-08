@@ -101,10 +101,14 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	//Diffuse Light Colour (RGBA)
 	diffuseLight = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 
+	//Ambient Light
 	ambientLight = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
 	ambientMateral = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 
-
+	//Specular Light
+	specularLight = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	specularMaterial = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	specularPower = 1.0f;
 
 	return S_OK;
 }
@@ -826,7 +830,7 @@ void Application::Draw()
 	cb.LightVecW = lightDirection;
 	cb.AmbientLight = ambientLight;
 	cb.AmbientMtrl = ambientMateral;
-
+	cb.SpecularMtrl = specularMaterial;
 
 	//_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 

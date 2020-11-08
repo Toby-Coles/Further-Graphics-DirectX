@@ -34,7 +34,10 @@ struct ConstantBuffer
 	XMFLOAT4 AmbientLight;
 	XMFLOAT4 AmbientMtrl;
 
-
+	XMFLOAT4 SpecularMtrl;
+	XMFLOAT4 SpecularLight;
+	float SpecularPower;
+	XMFLOAT3 EyePosW;
 };
 
 class Application
@@ -63,12 +66,21 @@ private:
 	XMFLOAT4X4              _view;
 	XMFLOAT4X4              _projection;
 
+	//Diffuse Light
 	XMFLOAT3 lightDirection;
 	XMFLOAT4 diffuseMaterial;
 	XMFLOAT4 diffuseLight;
 
+	//Ambient Light
 	XMFLOAT4 ambientLight;
 	XMFLOAT4 ambientMateral;
+
+	//specular Light
+	XMFLOAT4 specularMaterial;
+	XMFLOAT4 specularLight;
+	float specularPower;
+	XMFLOAT3 EyePosW;
+
 
 	bool cubeView;
 	bool pyramidView;

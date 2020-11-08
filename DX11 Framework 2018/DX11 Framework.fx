@@ -23,8 +23,17 @@ cbuffer ConstantBuffer : register( b0 )
     //I.e, in the opposite direction of the incoming light rays (XYZ)
     float3 LightVecW;
 
+    //Ambient Lighting 
     float4 AmbientLight;
     float4 AmbientMtrl;
+
+    //Specular Lighting
+    float4 SpecularMtrl;
+    float4 SpecularLight;
+    float SpecularPower;
+    float3 EyePosW;
+
+
 
 }
 

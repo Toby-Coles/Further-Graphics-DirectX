@@ -4,6 +4,14 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
 
+
+//-------------------------------------------------------------------------------------
+// Texturing
+//-------------------------------------------------------------------------------------
+
+Texture2D txDiffuse : register( t0 );
+SamplerState samLinear : register(s0);
+
 //--------------------------------------------------------------------------------------
 // Constant Buffer Variables
 //--------------------------------------------------------------------------------------
@@ -45,15 +53,27 @@ struct VS_OUTPUT
     float4 Pos : SV_POSITION;
     //float4 Color : COLOR0;
     float3 Norm: NORMAL;
-    float3 Posw : POSITION;
-   // float3 PosW : POSITION;
+    //float3 Posw : POSITION;
+    float3 PosW : POSITION;
 };
 
+struct VS_INPUT
+{
+    float4 Pos : POSITION;
+    float2 Tex : TEXCOORD0;
+};
+
+struct PS_INPUT
+{
+    float4 Pos : SV_POSITION;
+    float2 Tex : TEXCOORD0;
+
+};
 //--------------------------------------------------------------------------------------
 // Vertex Shader
 //--------------------------------------------------------------------------------------
 
-VS_OUTPUT VS(float4 Pos : POSITION, float3 NormalL : NORMAL)
+VS_OUTPUT VS(float4 Pos : POSITION, float3 NormalL : NORMAL, float2 Tex : TEXCOORD0, VS_INPUT input)
 {
     
     VS_OUTPUT output = (VS_OUTPUT)0;
@@ -62,6 +82,7 @@ VS_OUTPUT VS(float4 Pos : POSITION, float3 NormalL : NORMAL)
     output.Pos = mul( Pos, World );
     output.Pos = mul( output.Pos, View );
     output.Pos = mul( output.Pos, Projection );
+    output.Tex = input.Tex;
 
 
 
@@ -74,10 +95,15 @@ VS_OUTPUT VS(float4 Pos : POSITION, float3 NormalL : NORMAL)
 //--------------------------------------------------------------------------------------
 // Pixel Shader
 //--------------------------------------------------------------------------------------
-float4 PS( VS_OUTPUT input ) : SV_Target
+float4 PS(VS_OUTPUT input) : SV_Target
 {
-     // Convert from local space to world space 
-    // W component of vector is 0 as vectors cannot be translated
+    // Convert from local space to world space 
+   // W component of vector is 0 as vectors cannot be translated
+
+
+    //Texture
+   float4 textureColour = txDiffuse.Sample(samLinear, input.Tex);
+
 
     float3 normalW = mul(float4(input.Norm, 0.0f), World).xyz;
 
@@ -97,7 +123,7 @@ float4 PS( VS_OUTPUT input ) : SV_Target
     // Compute Colour using Diffuse and ambient lighting
     float diffuseAmount = max(dot(LightVecW, normalW), 0.0f);
 
-    float3 diffuse = diffuseAmount * (DiffuseMtrl * DiffuseLight).rgb;
+    float3 diffuse = diffuseAmount * ( textureColour * DiffuseMtrl * DiffuseLight).rgb;
     float3 specular = specularAmount * (SpecularMtrl * SpecularLight).rgb;
 
     endColour.rgb = ambient + diffuse + specular;

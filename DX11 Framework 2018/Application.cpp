@@ -660,6 +660,26 @@ HRESULT Application::InitDevice()
 	wfdesc.CullMode = D3D11_CULL_NONE;
 	hr = _pd3dDevice->CreateRasterizerState(&wfdesc, &_wireFrame);
 
+	//Load texture from file
+	CreateDDSTextureFromFile(_pd3dDevice, L"Textures/Crate_COLOR.dds", nullptr, &p_TextureRV);
+	_pImmediateContext->PSSetShaderResources(0, 1, &p_TextureRV);
+
+	CreateDDSTextureFromFile(_pd3dDevice, L"Textures/Crate_SPECULAR.dds", nullptr, &p_SpecularTexture);
+	_pImmediateContext->PSSetShaderResources(1, 1, &p_SpecularTexture);
+
+	//Create Sampler
+	D3D11_SAMPLER_DESC samplerDesc;
+	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	_pd3dDevice->CreateSamplerState(&samplerDesc, &_pSamplerLinear);
+	_pImmediateContext->PSSetSamplers(0, 1, &_pSamplerLinear);
 
 
 

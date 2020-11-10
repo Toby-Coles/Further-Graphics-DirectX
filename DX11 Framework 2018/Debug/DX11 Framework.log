@@ -1,23 +1,5 @@
 ﻿  Application.cpp
-<<<<<<< HEAD
-<<<<<<< HEAD
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Structures.h(14,14): error C3646: 'Pos': unknown override specifier
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Structures.h(14,14): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Structures.h(16,17): error C3646: 'Normal': unknown override specifier
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Structures.h(16,17): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Structures.h(17,15): error C3646: 'TexC': unknown override specifier
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Structures.h(17,15): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
 C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(211,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(233,13): error C2078: too many initializers
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(293,12): error C2078: too many initializers
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(350,28): error C2039: 'Pos': is not a member of 'SimpleVertex'
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Structures.h(11): message : see declaration of 'SimpleVertex'
-=======
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(210,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
->>>>>>> parent of 3e2bad5... PRE RE FACTOR - Specular from file implemented however not fully working
-=======
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(210,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
->>>>>>> parent of 3e2bad5... PRE RE FACTOR - Specular from file implemented however not fully working
 C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(381,27): warning C4244: '=': conversion from 'UINT' to '_Ty', possible loss of data
           with
           [
@@ -48,31 +30,16 @@ C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Grap
           [
               _Ty=WORD
           ]
-<<<<<<< HEAD
-<<<<<<< HEAD
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(740,132): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(744,138): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(748,142): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(748,133): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(756,267): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  DDSTextureLoader.cpp
-  DX11 Framework.cpp
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Structures.h(14,14): error C3646: 'Pos': unknown override specifier
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Structures.h(14,14): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Structures.h(16,17): error C3646: 'Normal': unknown override specifier
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Structures.h(16,17): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Structures.h(17,15): error C3646: 'TexC': unknown override specifier
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Structures.h(17,15): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
-  Generating Code...
-=======
-=======
->>>>>>> parent of 3e2bad5... PRE RE FACTOR - Specular from file implemented however not fully working
 C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(338,8): warning C4189: 'du': local variable is initialized but not referenced
 C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(339,8): warning C4189: 'dv': local variable is initialized but not referenced
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(723,132): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(727,138): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(731,142): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(731,133): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(739,267): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(743,132): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(747,138): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(751,142): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(751,133): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(759,267): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  DX11 Framework.cpp
+  Generating Code...
+  LINK : C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Debug\DX11 Framework.exe not found or not built by the last incremental link; performing full link
+Application.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
+DDSTextureLoader.obj : warning LNK4204: 'C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Debug\vc142.pdb' is missing debugging information for referencing module; linking object as if no debug info
   DX11 Framework.vcxproj -> C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Debug\DX11 Framework.exe
->>>>>>> parent of 3e2bad5... PRE RE FACTOR - Specular from file implemented however not fully working

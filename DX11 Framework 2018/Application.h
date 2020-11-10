@@ -7,16 +7,10 @@
 #include <directxcolors.h>
 #include "resource.h"
 #include <vector>
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 #include "DDSTextureLoader.h"
-#include "Structures.h"
-=======
-=======
 
->>>>>>> parent of 3e2bad5... PRE RE FACTOR - Specular from file implemented however not fully working
 
->>>>>>> parent of 3e2bad5... PRE RE FACTOR - Specular from file implemented however not fully working
 
 
 
@@ -42,7 +36,15 @@ struct ConstantBuffer
 	XMFLOAT3 EyePosW;
 };
 
+struct SimpleVertex
+{
 
+	XMFLOAT3 Pos;
+	//XMFLOAT4 Color;
+	XMFLOAT3 Normal;
+	XMFLOAT2 TexC;
+
+};
 
 
 class Application
@@ -85,6 +87,13 @@ private:
 	XMFLOAT4 specularLight;
 	float specularPower;
 	XMFLOAT3 EyePosW;
+
+	//Texturing
+	ID3D11ShaderResourceView* p_TextureRV = nullptr;
+	ID3D11ShaderResourceView* p_SpecularTexture = nullptr;
+
+	//Texture Sampler
+	ID3D11SamplerState* _pSamplerLinear = nullptr;
 
 
 	bool cubeView;

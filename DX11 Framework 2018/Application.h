@@ -8,20 +8,11 @@
 #include "resource.h"
 #include <vector>
 #include "DDSTextureLoader.h"
+#include "Structures.h"
 
 
 
 using namespace DirectX;
-
-struct SimpleVertex
-{
-	
-    XMFLOAT3 Pos;
-    //XMFLOAT4 Color;
-	XMFLOAT3 Normal; 
-	XMFLOAT2 TexC;
-
-};
 
 struct ConstantBuffer
 {
@@ -42,6 +33,9 @@ struct ConstantBuffer
 	float SpecularPower;
 	XMFLOAT3 EyePosW;
 };
+
+
+
 
 class Application
 {

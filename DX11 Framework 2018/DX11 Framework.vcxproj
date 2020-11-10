@@ -386,6 +386,7 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="DDSTextureLoader.h" />
     <CLInclude Include="resource.h" />
+    <ClInclude Include="Structures.h" />
     <ResourceCompile Include="DX11 Framework.rc" />
   </ItemGroup>
   <ItemGroup>

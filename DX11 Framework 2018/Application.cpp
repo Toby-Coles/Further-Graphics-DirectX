@@ -103,13 +103,13 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	diffuseLight = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	//Ambient Light
-	ambientLight = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
-	ambientMateral = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	ambientLight = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
+	ambientMateral = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
 
 	//Specular Light
 	specularLight = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	specularMaterial = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
-	specularPower = 5.0f;
+	specularMaterial = XMFLOAT4(0.4f, 0.4f, 0.4f, 1.0f);
+	specularPower = 10.0f;
 
 	return S_OK;
 }

@@ -113,7 +113,7 @@ float4 PS(VS_OUTPUT input) : SV_Target
     
     //Specular
     float3 r = reflect(-LightVecW, normalW);
-    float specularAmount = pow(max(dot(r, toEye), 0.0f), specularPower);
+    float specularAmount = pow(max(dot(r, toEye), 0.0f), SpecularPower);
 
    
     // Compute Colour using Diffuse and ambient lighting

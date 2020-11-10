@@ -10,7 +10,6 @@
 //-------------------------------------------------------------------------------------
 
 Texture2D txDiffuse : register( t0 );
-Texture2D txSpecular : register ( t1 );
 SamplerState samLinear : register(s0);
 
 //--------------------------------------------------------------------------------------
@@ -56,26 +55,34 @@ struct VS_OUTPUT
     float3 Norm: NORMAL;
     //float3 Posw : POSITION;
     float3 PosW : POSITION;
+};
+
+struct VS_INPUT
+{
+    float4 Pos : POSITION;
     float2 Tex : TEXCOORD0;
 };
 
+struct PS_INPUT
+{
+    float4 Pos : SV_POSITION;
+    float2 Tex : TEXCOORD0;
 
+};
 //--------------------------------------------------------------------------------------
 // Vertex Shader
 //--------------------------------------------------------------------------------------
 
-VS_OUTPUT VS(float4 Pos : POSITION, float3 NormalL : NORMAL, float2 Tex : TEXCOORD0)
+VS_OUTPUT VS(float4 Pos : POSITION, float3 NormalL : NORMAL, float2 Tex : TEXCOORD0, VS_INPUT input)
 {
     
     VS_OUTPUT output = (VS_OUTPUT)0;
-     output.Norm = normalize(NormalL);
+     output.Norm = NormalL;
 
     output.Pos = mul( Pos, World );
-    //output.eye = normalize(EyePosW.xyz - output.Pos.xyz)
     output.Pos = mul( output.Pos, View );
     output.Pos = mul( output.Pos, Projection );
-    output.PosW = mul ( Pos, World); 
-    output.Tex = Tex;
+    output.Tex = input.Tex;
 
 
 
@@ -96,10 +103,6 @@ float4 PS(VS_OUTPUT input) : SV_Target
 
     //Texture
    float4 textureColour = txDiffuse.Sample(samLinear, input.Tex);
-   float4 specularColour = txSpecular.Sample(samLinear, input.Tex);
-
-   float3 specularValue = specularColour.xyz;
-   float specularPower = specularColour.w;
 
 
     float3 normalW = mul(float4(input.Norm, 0.0f), World).xyz;
@@ -114,16 +117,16 @@ float4 PS(VS_OUTPUT input) : SV_Target
     
     //Specular
     float3 r = reflect(-LightVecW, normalW);
-    float specularAmount = pow(max(dot(r, toEye), 0.0f), specularPower);
- 
+    float specularAmount = pow(max(dot(r, toEye), 0.0f), SpecularPower);
+
    
     // Compute Colour using Diffuse and ambient lighting
     float diffuseAmount = max(dot(LightVecW, normalW), 0.0f);
 
     float3 diffuse = diffuseAmount * ( textureColour * DiffuseMtrl * DiffuseLight).rgb;
-    float3 specular = specularAmount * (specularValue * SpecularMtrl * SpecularLight).rgb;
+    float3 specular = specularAmount * (SpecularMtrl * SpecularLight).rgb;
 
-    endColour.rgb = diffuse + ambient + specular; 
+    endColour.rgb = ambient + diffuse + specular;
     endColour.a = DiffuseMtrl.a;
 
     return endColour;

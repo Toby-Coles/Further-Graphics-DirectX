@@ -8,9 +8,13 @@
 #include "resource.h"
 #include <vector>
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "DDSTextureLoader.h"
 #include "Structures.h"
 =======
+=======
+
+>>>>>>> parent of 3e2bad5... PRE RE FACTOR - Specular from file implemented however not fully working
 
 >>>>>>> parent of 3e2bad5... PRE RE FACTOR - Specular from file implemented however not fully working
 

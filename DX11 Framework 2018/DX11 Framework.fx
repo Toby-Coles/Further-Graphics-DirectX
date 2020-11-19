@@ -98,8 +98,7 @@ float4 PS(VS_OUTPUT input) : SV_Target
    float4 specularColour = txSpecular.Sample(samLinear, input.Tex);
 
    float3 specularValue = specularColour.xyz;
-   float specularPower = specularColour.w;
-
+ 
 
     float3 normalW = mul(float4(input.Norm, 0.0f), World).xyz;
 

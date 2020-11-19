@@ -9,7 +9,8 @@
 #include <vector>
 
 #include "DDSTextureLoader.h"
-
+#include "Structures.h"
+#include "SceneObject.h"
 
 
 
@@ -36,15 +37,7 @@ struct ConstantBuffer
 	XMFLOAT3 EyePosW;
 };
 
-struct SimpleVertex
-{
 
-	XMFLOAT3 Pos;
-	//XMFLOAT4 Color;
-	XMFLOAT3 Normal;
-	XMFLOAT2 TexC;
-
-};
 
 
 class Application
@@ -87,6 +80,8 @@ private:
 	XMFLOAT4 specularLight;
 	float specularPower;
 	XMFLOAT3 EyePosW;
+
+	SimpleVertex simpleVertex;
 
 	//Texturing
 	ID3D11ShaderResourceView* p_TextureRV = nullptr;
@@ -134,12 +129,17 @@ private:
 	float keyCoolDown;
 	bool wireFrame;
 
+	//Scene Objects
+	std::vector<SceneObject> applicationObjects;
+
 
 public:
 	Application();
 	~Application();
 
 	HRESULT Initialise(HINSTANCE hInstance, int nCmdShow);
+	
+	ID3D11Device* GetDevice();
 
 	void Update();
 	void Draw();

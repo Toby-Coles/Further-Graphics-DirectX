@@ -114,6 +114,11 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	return S_OK;
 }
 
+ID3D11Device* Application::GetDevice()
+{
+	return _pd3dDevice;
+}
+
 HRESULT Application::InitShadersAndInputLayout()
 {
 	HRESULT hr;

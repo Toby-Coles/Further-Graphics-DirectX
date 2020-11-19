@@ -1,4 +1,7 @@
 #pragma once
+
+
+
 #include <windows.h>
 #include <d3d11_1.h>
 #include <d3dcompiler.h>
@@ -8,3 +11,17 @@
 
 
 
+struct SimpleVertex
+{
+
+	DirectX::XMFLOAT3 Pos;
+	//XMFLOAT4 Color;
+	DirectX::XMFLOAT3 Normal;
+	DirectX::XMFLOAT2 TexC;
+
+	bool operator < (const SimpleVertex other) const
+	{
+		return memcmp((void*)this, (void*)&other, sizeof(SimpleVertex)) > 0;
+	};
+
+};

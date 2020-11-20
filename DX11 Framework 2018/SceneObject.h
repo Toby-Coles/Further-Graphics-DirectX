@@ -6,6 +6,7 @@
 #include <directxcolors.h>
 #include "DDSTextureLoader.h"
 #include "OBJLoader.h"
+#include "ApplicationGraphics.h"
 //#include "Application.h"
 
 #include <vector>

@@ -6,8 +6,7 @@ SceneObject::SceneObject(ID3D11Device* device, char* filepath, XMFLOAT3 initialP
 	mMeshData = OBJLoader::Load(filepath, this->_pd3dDevice, false);
 
 	Initialise();
-	SetPosition(initialPosition);
-	SetRotation(initialRotation);
+
 	GenerateTexture(texturePath);
 
 	

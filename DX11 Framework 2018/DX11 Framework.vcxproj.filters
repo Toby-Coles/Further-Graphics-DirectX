@@ -17,6 +17,7 @@
     <ClInclude Include="SceneObject.h" />
     <ClInclude Include="OBJLoader.h" />
     <ClInclude Include="CubeObject.h" />
+    <ClInclude Include="ApplicationGraphics.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -25,6 +26,7 @@
     <ClCompile Include="SceneObject.cpp" />
     <ClCompile Include="OBJLoader.cpp" />
     <ClCompile Include="CubeObject.cpp" />
+    <ClCompile Include="ApplicationGraphics.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CLInclude Include="resource.h">

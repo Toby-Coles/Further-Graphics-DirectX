@@ -76,9 +76,6 @@ VS_OUTPUT VS(float4 Pos : POSITION, float3 NormalL : NORMAL, float2 Tex : TEXCOO
     output.PosW = mul(Pos, World);
     output.Tex = Tex;
 
-
-
-
     return output;
 
 }

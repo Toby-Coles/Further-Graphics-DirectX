@@ -45,12 +45,15 @@ public:
 	//Buffers
 	void SetVertexBuffer(ID3D11Buffer* buffer);
 	void SetIndexBuffer(ID3D11Buffer* buffer);
-	void UpdateConstantBufferVariables();
+	void UpdateConstantBufferVariables(XMFLOAT4X4& position);
 	void ClearBackBuffer();
+
 
 	//Drawing
 	void Draw(unsigned int indexCount);
 	void Present();
+	void BindTextures(int initSlot, int count, std::vector<ID3D11ShaderResourceView*> textures);
+
 
 	//Wireframe
 	void UpdateWireFrame();
@@ -65,7 +68,7 @@ public:
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetContext();
 	
-	ConstantBuffer cb;
+	
 	ConstantBuffer GetCB();
 	XMFLOAT4X4 GetWorld();
 
@@ -84,18 +87,18 @@ private:
 	HWND                    _hWnd;
 	D3D_DRIVER_TYPE         _driverType;
 	D3D_FEATURE_LEVEL       _featureLevel;
-	ID3D11Device*			 _pd3dDevice;
-	ID3D11DeviceContext*	 _pImmediateContext;
-	IDXGISwapChain*			 _pSwapChain;
+	ID3D11Device*			_pd3dDevice;
+	ID3D11DeviceContext*	_pImmediateContext;
+	IDXGISwapChain*			_pSwapChain;
 	ID3D11RenderTargetView*	_pRenderTargetView;
-	ID3D11Buffer*			 _pConstantBuffer;
+	ID3D11Buffer*			_pConstantBuffer;
 	XMFLOAT4X4              _world;
 	XMFLOAT4X4				_world2;
 	XMFLOAT4X4              _view;
 	XMFLOAT4X4              _projection;
-	ID3D11VertexShader* _pVertexShader;
-	ID3D11PixelShader* _pPixelShader;
-	ID3D11InputLayout* _pVertexLayout;
+	ID3D11VertexShader*		_pVertexShader;
+	ID3D11PixelShader*		_pPixelShader;
+	ID3D11InputLayout*	    _pVertexLayout;
 
 	//Diffuse Light
 	XMFLOAT3 lightDirection;

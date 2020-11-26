@@ -1,25 +1,22 @@
 #include "SceneObject.h"
 
-SceneObject::SceneObject(ID3D11Device* device, char* filepath, XMFLOAT3 initialPosition, XMFLOAT3 initialRotation, wchar_t* texturePath) {
+SceneObject::SceneObject (ApplicationGraphics* graphics) {
 
-	this->_pd3dDevice = device;
-	mMeshData = OBJLoader::Load(filepath, this->_pd3dDevice, false);
+	
+	this->appGFX = graphics;
+
+	//ID3D11Device* device = appGFX->GetDevice();
+	//mMeshData = OBJLoader::Load(filepath, this->_pd3dDevice, false);
 
 	Initialise();
 
-	GenerateTexture(texturePath);
-
-	
-	
-	
 }
 
 //second constructor for if a model does not need to be loaded 
-SceneObject::SceneObject(XMFLOAT3 initialPosition, XMFLOAT3 initialRotation) {
+SceneObject::SceneObject() {
 
 	Initialise();
-	SetPosition(initialPosition);
-	SetRotation(initialRotation);
+	
 
 }
 
@@ -45,16 +42,25 @@ void SceneObject::Initialise()
 
 }
 
-void SceneObject::GenerateTexture(wchar_t* texturePath)
+void SceneObject::GenerateTexture(wchar_t* texturePath, ID3D11Device* device)
 {
 	ID3D11ShaderResourceView* texture;
-	LoadTexture(texturePath, &texture);
+	LoadTexture(texturePath, &texture, device);
 	mTextures.push_back(texture);
 }
 
-HRESULT SceneObject::LoadTexture(wchar_t* path, ID3D11ShaderResourceView** texture)
+void SceneObject::LoadModelMesh(char* filepath, ID3D11Device* device)
 {
-	return CreateDDSTextureFromFile(this->_pd3dDevice, path, nullptr, texture); 
+	//mMeshadata = incomingdata
+	mMeshData = OBJLoader::Load(filepath, device, false);
+
+}
+
+
+
+HRESULT SceneObject::LoadTexture(wchar_t* path, ID3D11ShaderResourceView** texture, ID3D11Device* device)
+{
+	return CreateDDSTextureFromFile(device, path, nullptr, texture); 
 
 }
 
@@ -116,6 +122,17 @@ XMFLOAT3 SceneObject::GetScale()
 void SceneObject::Draw()
 {
 
+	appGFX->SetIndexBuffer(mMeshData.IndexBuffer);
+	appGFX->SetVertexBuffer(mMeshData.VertexBuffer);
+	for (int i = 0; i < mTextures.size(); i++)
+	{
+		appGFX->BindTextures(i, mTextures.size(), mTextures);
+	}
+	
+	//appGFX->InitShadersAndInputLayout();
+	
+	appGFX->UpdateConstantBufferVariables(mTransform);
+	appGFX->Draw(mMeshData.IndexCount);
 }
 
 void SceneObject::Update()

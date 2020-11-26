@@ -81,6 +81,29 @@ HRESULT ApplicationGraphics::Initialize(HINSTANCE hInstance, int nCmdShow)
 	return S_OK;
 }
 
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	PAINTSTRUCT ps;
+	HDC hdc;
+
+	switch (message)
+	{
+	case WM_PAINT:
+		hdc = BeginPaint(hWnd, &ps);
+		EndPaint(hWnd, &ps);
+		break;
+
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		break;
+
+	default:
+		return DefWindowProc(hWnd, message, wParam, lParam);
+	}
+
+	return 0;
+}
+
 void ApplicationGraphics::SetVertexBuffer(ID3D11Buffer* buffer)
 {
 	UINT stride = sizeof(SimpleVertex);
@@ -94,9 +117,10 @@ void ApplicationGraphics::SetIndexBuffer(ID3D11Buffer* buffer)
 	_pImmediateContext->IASetIndexBuffer(buffer, DXGI_FORMAT_R16_UINT, 0);
 }
 
-void ApplicationGraphics::UpdateConstantBufferVariables()
+void ApplicationGraphics::UpdateConstantBufferVariables(XMFLOAT4X4& position)
 {
-	XMMATRIX world = XMLoadFloat4x4(&_world);
+	ConstantBuffer cb;
+	XMMATRIX world = XMLoadFloat4x4(&position);
 	XMMATRIX view = XMLoadFloat4x4(&_view);
 	XMMATRIX projection = XMLoadFloat4x4(&_projection);
 
@@ -115,6 +139,8 @@ void ApplicationGraphics::UpdateConstantBufferVariables()
 	cb.SpecularLight = specularLight;
 	cb.SpecularPower = specularPower;
 	cb.EyePosW = EyePosW;
+
+	_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 }
 
 void ApplicationGraphics::ClearBackBuffer()
@@ -134,6 +160,14 @@ void ApplicationGraphics::Draw(unsigned int indexCount)
 void ApplicationGraphics::Present()
 {
 	_pSwapChain->Present(0, 0);
+}
+
+void ApplicationGraphics::BindTextures(int initSlot, int count, std::vector<ID3D11ShaderResourceView*> textures)
+{
+	
+		_pImmediateContext->PSSetShaderResources(initSlot, count, &textures[0]);
+	
+	
 }
 
 void ApplicationGraphics::UpdateWireFrame()
@@ -163,7 +197,7 @@ float ApplicationGraphics::TimerUpdate(float t)
 	if (_driverType == D3D_DRIVER_TYPE_REFERENCE)
 	{
 		t += (float)XM_PI * 0.0125f;
-		return t
+		return t;
 	}
 	else
 	{
@@ -198,11 +232,11 @@ ID3D11DeviceContext* ApplicationGraphics::GetContext()
 	return _pImmediateContext;
 }
 
-ConstantBuffer ApplicationGraphics::GetCB()
-{
-	
-	return cb;
-}
+//ConstantBuffer ApplicationGraphics::GetCB()
+//{
+//	
+//	return cb;
+//}
 
 XMFLOAT4X4 ApplicationGraphics::GetWorld()
 {
@@ -244,28 +278,7 @@ HRESULT ApplicationGraphics::InitWindow(HINSTANCE hInstance, int nCmdShow)
 	return S_OK;
 }
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	PAINTSTRUCT ps;
-	HDC hdc;
 
-	switch (message)
-	{
-	case WM_PAINT:
-		hdc = BeginPaint(hWnd, &ps);
-		EndPaint(hWnd, &ps);
-		break;
-
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		break;
-
-	default:
-		return DefWindowProc(hWnd, message, wParam, lParam);
-	}
-
-	return 0;
-}
 
 
 HRESULT ApplicationGraphics::InitDevice()
@@ -367,21 +380,6 @@ HRESULT ApplicationGraphics::InitDevice()
 
 	InitShadersAndInputLayout();
 
-	InitVertexBuffer();
-
-	// Set vertex buffer (initial)
-	UINT stride = sizeof(SimpleVertex);
-	UINT offset = 0;
-	_pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBufferCube, &stride, &offset);
-
-	InitIndexBuffer();
-
-	// Set index buffer (initial)
-	_pImmediateContext->IASetIndexBuffer(_pIndexBufferCube, DXGI_FORMAT_R16_UINT, 0);
-
-	// Set primitive topology
-	_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
 	// Create the constant buffer
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
@@ -390,6 +388,25 @@ HRESULT ApplicationGraphics::InitDevice()
 	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	bd.CPUAccessFlags = 0;
 	hr = _pd3dDevice->CreateBuffer(&bd, nullptr, &_pConstantBuffer);
+
+	SetShaders(_pVertexShader, _pPixelShader);
+
+	//InitVertexBuffer();
+
+	//// Set vertex buffer (initial)
+	//UINT stride = sizeof(SimpleVertex);
+	//UINT offset = 0;
+	//_pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBufferCube, &stride, &offset);
+
+	//InitIndexBuffer();
+
+	// Set index buffer (initial)
+	//_pImmediateContext->IASetIndexBuffer(_pIndexBufferCube, DXGI_FORMAT_R16_UINT, 0);
+
+	// Set primitive topology
+	_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	
 
 
 	//Set up Wireframe
@@ -428,6 +445,8 @@ HRESULT ApplicationGraphics::InitDevice()
 
 	return S_OK;
 }
+
+
 
 void ApplicationGraphics::Cleanup()
 {
@@ -540,6 +559,7 @@ HRESULT ApplicationGraphics::InitShadersAndInputLayout()
 
 	// Set the input layout
 	_pImmediateContext->IASetInputLayout(_pVertexLayout);
+	
 
 	return hr;
 }

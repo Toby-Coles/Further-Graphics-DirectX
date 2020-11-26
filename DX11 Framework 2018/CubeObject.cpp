@@ -1,9 +1,10 @@
-#include "CubeObject.h"
-
-CubeObject::CubeObject()
-{
-}
-
-CubeObject::~CubeObject()
-{
-}
+//#include "CubeObject.h"
+//
+//CubeObject::CubeObject() 
+//{
+//
+//}
+//
+//CubeObject::~CubeObject()
+//{
+//}

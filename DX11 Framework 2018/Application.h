@@ -7,7 +7,6 @@
 #include <directxcolors.h>
 #include "resource.h"
 #include <vector>
-
 #include "DDSTextureLoader.h"
 #include "Structures.h"
 #include "SceneObject.h"
@@ -17,11 +16,6 @@
 
 
 using namespace DirectX;
-
-
-
-
-
 
 class Application
 {
@@ -58,7 +52,7 @@ private:
 	std::vector<XMFLOAT4X4> asteroidBelt;
 	XMFLOAT4X4 gridPlane;
 
-	CubeObject* cube;
+	SceneObject* cube;
 
 private:
 	

@@ -5,18 +5,12 @@
 
 Application::Application()
 {
-	
 	_pVertexBufferCube = nullptr;
 	_pIndexBufferCube = nullptr;
 	_pVertexBufferPyramid = nullptr;
 	_pIndexBufferPyramid = nullptr;
-	
-
-
 	cubeView = true;
 	pyramidView = false;
-
-
 }
 
 Application::~Application()
@@ -27,15 +21,20 @@ Application::~Application()
 HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 {
 	appGFX = new ApplicationGraphics();
-
-	cube = new CubeObject();
-	cube->SetPosition(XMFLOAT3(0.0f, 0.0f, 0.0f));
-	cube->GenerateTexture(L"Textures/Crate_COLOR.dds");
-
-
 	appGFX->Initialize(hInstance, nCmdShow);
 
-	
+
+	cube = new SceneObject(appGFX);
+	//cube->SetDevice(appGFX->GetDevice());
+	//cube->SetMeshData(objloader::load(Jsonobj1, deviceContext);
+	cube->LoadModelMesh("Models/cube.obj", appGFX->GetDevice());
+
+	cube->SetPosition(XMFLOAT3(0.3f, 0.2f, 0.1f));
+	cube->SetScale(XMFLOAT3(0.5f, 0.5f, 0.5f));
+	cube->SetRotation(XMFLOAT3(0.1f, 0.1f, 0.1f));
+	cube->GenerateTexture(L"Textures/Crate_COLOR.dds", appGFX->GetDevice());
+	cube->GenerateTexture(L"Textures/Crate_SPECULAR.dds", appGFX->GetDevice());
+
 
 	return S_OK;
 }
@@ -269,8 +268,6 @@ void Application::GenerateGridPlain(float width, float depth, UINT m, UINT n) {
 
 }
 
-
-
 HRESULT Application::InitIndexBuffer()
 {
 	HRESULT hrCube;
@@ -330,9 +327,6 @@ HRESULT Application::InitIndexBuffer()
 	return S_OK;
 }
 
-
-
-
 void Application::Cleanup()
 {
 	
@@ -352,31 +346,28 @@ void Application::Update()
 
 	
 
+	////Scene object creation
+	//sceneObjects.resize(5);
 
+	//XMMATRIX sol = XMMatrixIdentity();
+	//sol = XMMatrixMultiply(sol, XMMatrixScaling(0.7, 0.7, 0.7) * XMMatrixTranslation(0, 0, 0) * XMMatrixRotationRollPitchYaw(t * 1, t * 0.5, 0));
+	//XMStoreFloat4x4(&sceneObjects[0], sol);
 
+	//XMMATRIX planet1 = XMMatrixIdentity();
+	//planet1 = XMMatrixMultiply(planet1, XMMatrixScaling(0.25, 0.25, 0.25) * XMMatrixTranslation(1.5, 0, 0) * XMMatrixRotationRollPitchYaw(t * 0.8, t * 1, 0));
+	//XMStoreFloat4x4(&sceneObjects[1], planet1);
 
-	//Scene object creation
-	sceneObjects.resize(5);
+	//XMMATRIX planet2 = XMMatrixIdentity();
+	//planet2 = XMMatrixMultiply(planet2, XMMatrixScaling(0.3, 0.3, 0.3) * XMMatrixTranslation(3, 0, 0) * XMMatrixRotationRollPitchYaw(t * 0.5, t * 1.4, 0));
+	//XMStoreFloat4x4(&sceneObjects[3], planet2);
 
-	XMMATRIX sol = XMMatrixIdentity();
-	sol = XMMatrixMultiply(sol, XMMatrixScaling(0.7, 0.7, 0.7) * XMMatrixTranslation(0, 0, 0) * XMMatrixRotationRollPitchYaw(t * 1, t * 0.5, 0));
-	XMStoreFloat4x4(&sceneObjects[0], sol);
+	//XMMATRIX planet1_moon = XMMatrixIdentity();
+	//planet1_moon = XMMatrixMultiply(planet1_moon, XMMatrixTranslation(5.5, 0, 0) * XMMatrixScaling(0.1, 0.1, 0.1) * XMMatrixRotationRollPitchYaw(0, t * 2, 0) * XMMatrixRotationRollPitchYaw(0, t * 1, 0) * XMMatrixTranslation(1.5, 0, 0) * XMMatrixRotationRollPitchYaw(0, t * 1, 0));
+	//XMStoreFloat4x4(&sceneObjects[2], planet1_moon);
 
-	XMMATRIX planet1 = XMMatrixIdentity();
-	planet1 = XMMatrixMultiply(planet1, XMMatrixScaling(0.25, 0.25, 0.25) * XMMatrixTranslation(1.5, 0, 0) * XMMatrixRotationRollPitchYaw(t * 0.8, t * 1, 0));
-	XMStoreFloat4x4(&sceneObjects[1], planet1);
-
-	XMMATRIX planet2 = XMMatrixIdentity();
-	planet2 = XMMatrixMultiply(planet2, XMMatrixScaling(0.3, 0.3, 0.3) * XMMatrixTranslation(3, 0, 0) * XMMatrixRotationRollPitchYaw(t * 0.5, t * 1.4, 0));
-	XMStoreFloat4x4(&sceneObjects[3], planet2);
-
-	XMMATRIX planet1_moon = XMMatrixIdentity();
-	planet1_moon = XMMatrixMultiply(planet1_moon, XMMatrixTranslation(5.5, 0, 0) * XMMatrixScaling(0.1, 0.1, 0.1) * XMMatrixRotationRollPitchYaw(0, t * 2, 0) * XMMatrixRotationRollPitchYaw(0, t * 1, 0) * XMMatrixTranslation(1.5, 0, 0) * XMMatrixRotationRollPitchYaw(0, t * 1, 0));
-	XMStoreFloat4x4(&sceneObjects[2], planet1_moon);
-
-	XMMATRIX planet2_moon = XMMatrixIdentity();
-	planet2_moon = XMMatrixMultiply(planet2_moon, XMMatrixTranslation(6.5, 0, 0) * XMMatrixScaling(0.1, 0.1, 0.1) * XMMatrixRotationRollPitchYaw(0, t * 2, 0) * XMMatrixRotationRollPitchYaw(0, t * 1, 0) * XMMatrixTranslation(3, 0, 0) * XMMatrixRotationRollPitchYaw(0, t * 1.4, 0));
-	XMStoreFloat4x4(&sceneObjects[4], planet2_moon);
+	//XMMATRIX planet2_moon = XMMatrixIdentity();
+	//planet2_moon = XMMatrixMultiply(planet2_moon, XMMatrixTranslation(6.5, 0, 0) * XMMatrixScaling(0.1, 0.1, 0.1) * XMMatrixRotationRollPitchYaw(0, t * 2, 0) * XMMatrixRotationRollPitchYaw(0, t * 1, 0) * XMMatrixTranslation(3, 0, 0) * XMMatrixRotationRollPitchYaw(0, t * 1.4, 0));
+	//XMStoreFloat4x4(&sceneObjects[4], planet2_moon);
 
 	////Plane object creation
 	//XMMATRIX plane = XMMatrixIdentity();
@@ -385,7 +376,7 @@ void Application::Update()
 
 
 	//Enable/disable wireframe
-
+	cube->Update();
 	appGFX->UpdateWireFrame();
 
 	//Switch between pyramids and cubes
@@ -415,8 +406,10 @@ void Application::Update()
 
 void Application::Draw()
 {
-
+	appGFX->ClearBackBuffer();
 	cube->Draw();
+
+	appGFX->Present();
 
 	//RE IMPLEMENT HARD CODED SHAPES ///////////////////////////////////////////////////////////////////////
 	/*XMFLOAT4X4 world = appGFX->GetWorld();
@@ -446,21 +439,17 @@ void Application::Draw()
 			_pImmediateContext->DrawIndexed(18, 0, 0);
 		}
 	}*/
-
 	//////////////////////////////////////////////////////////////////////////////////
-
 	////Draw Grid plane
 	//UINT stride = sizeof(SimpleVertex);
 	//UINT offset = 0;
 	//_pImmediateContext->IASetIndexBuffer(_pIndexBufferGrid, DXGI_FORMAT_R16_UINT, 0);
 	//_pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBufferGrid, &stride, &offset);
-
 	//Draw the plane
  /*   world = XMLoadFloat4x4(&gridPlane);
 	cb.mWorld = XMMatrixTranspose(world);
 	_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 	_pImmediateContext->DrawIndexed(96, 0, 0);*/
-
 	/*for (int i = 0; i < 100; i++)
 	{
 		world = XMLoadFloat4x4(&asteroidBelt[i]);

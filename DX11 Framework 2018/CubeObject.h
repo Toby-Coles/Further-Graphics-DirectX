@@ -4,8 +4,10 @@
 class CubeObject : public SceneObject
 {
 public:
-	CubeObject();
-	~CubeObject();
+	//CubeObject() : SceneObject() {}
+	CubeObject(ApplicationGraphics* graphics) : SceneObject() {}
+
+	//~CubeObject();
 
 private:
 

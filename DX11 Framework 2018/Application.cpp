@@ -22,7 +22,20 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 {
 	appGFX = new ApplicationGraphics();
 	appGFX->Initialize(hInstance, nCmdShow);
+	skyMap = new SkyMap();
+	
+	//skyMap->LoadModelMesh("Models/sphere.obj", appGFX->GetDevice());
+	//camera1 = new Camera(XMFLOAT3(0.0f, 0.0f, 5.5f), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 1.0f, 0.0f), 640.0f, 480.0f, 0.1f, 100.0f);
+	camera1 = new Camera();
+	appGFX->SetCamera(camera1);
+	
+	camera1->SetCameraPosition(XMFLOAT3(0.0f, 0.0f, 5.5f));
+	//camera1->SetCameraLookAtPoint(XMFLOAT3(0.0f, 0.0f, 1.0f));
+	camera1->LookAt(camera1->GetCameraPosition(), XMFLOAT3(0.0f, 0.0f, 1.0f), camera1->GetCameraUp());
 
+
+	camera1->SetLens(0.25f * 3.1452f, 640 / 480, 0.01f, 100.0f);
+	appGFX->SetEyePosW(camera1->GetCameraPosition());
 
 	cube = new SceneObject(appGFX);
 	//cube->SetDevice(appGFX->GetDevice());
@@ -30,12 +43,20 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	cube->LoadModelMesh("Models/cube.obj", appGFX->GetDevice());
 
 	cube->SetPosition(XMFLOAT3(0.3f, 0.2f, 0.1f));
-	cube->SetScale(XMFLOAT3(0.5f, 0.5f, 0.5f));
+	cube->SetScale(XMFLOAT3(1.0f, 1.0f, 1.0f));
 	cube->SetRotation(XMFLOAT3(0.1f, 0.1f, 0.1f));
+
 	cube->GenerateTexture(L"Textures/Crate_COLOR.dds", appGFX->GetDevice());
 	cube->GenerateTexture(L"Textures/Crate_SPECULAR.dds", appGFX->GetDevice());
 
+	camera1->UpdateViewMatrix();
 
+	timer = new TimeKeep();
+	timer->Reset();
+	timer->Start();
+
+	rotation = 0.0f;
+	rotationSpeed = 2.0f;
 	return S_OK;
 }
 
@@ -88,6 +109,8 @@ XMFLOAT3 Application::CalculateNormals(XMFLOAT3 vertex1, XMFLOAT3 vertex2, XMFLO
 
 
 }
+
+
 
 HRESULT Application::InitVertexBuffer()
 {
@@ -335,40 +358,35 @@ void Application::Cleanup()
 	if (_pVertexBufferCube) _pVertexBufferPyramid->Release();
 	if (_pIndexBufferCube) _pIndexBufferPyramid->Release();
 	
-
-
+	
+	
 }
 
 void Application::Update()
 {
 	// Update our time
-	static float t = appGFX->TimerUpdate(t);
-
-	
+	//static float t = appGFX->TimerUpdate(t);
+	timer->Tick();
+	float deltaTime = timer->DeltaTime();
+	rotation += (rotationSpeed * deltaTime);
 
 	////Scene object creation
 	//sceneObjects.resize(5);
-
 	//XMMATRIX sol = XMMatrixIdentity();
 	//sol = XMMatrixMultiply(sol, XMMatrixScaling(0.7, 0.7, 0.7) * XMMatrixTranslation(0, 0, 0) * XMMatrixRotationRollPitchYaw(t * 1, t * 0.5, 0));
 	//XMStoreFloat4x4(&sceneObjects[0], sol);
-
 	//XMMATRIX planet1 = XMMatrixIdentity();
 	//planet1 = XMMatrixMultiply(planet1, XMMatrixScaling(0.25, 0.25, 0.25) * XMMatrixTranslation(1.5, 0, 0) * XMMatrixRotationRollPitchYaw(t * 0.8, t * 1, 0));
 	//XMStoreFloat4x4(&sceneObjects[1], planet1);
-
 	//XMMATRIX planet2 = XMMatrixIdentity();
 	//planet2 = XMMatrixMultiply(planet2, XMMatrixScaling(0.3, 0.3, 0.3) * XMMatrixTranslation(3, 0, 0) * XMMatrixRotationRollPitchYaw(t * 0.5, t * 1.4, 0));
 	//XMStoreFloat4x4(&sceneObjects[3], planet2);
-
 	//XMMATRIX planet1_moon = XMMatrixIdentity();
 	//planet1_moon = XMMatrixMultiply(planet1_moon, XMMatrixTranslation(5.5, 0, 0) * XMMatrixScaling(0.1, 0.1, 0.1) * XMMatrixRotationRollPitchYaw(0, t * 2, 0) * XMMatrixRotationRollPitchYaw(0, t * 1, 0) * XMMatrixTranslation(1.5, 0, 0) * XMMatrixRotationRollPitchYaw(0, t * 1, 0));
 	//XMStoreFloat4x4(&sceneObjects[2], planet1_moon);
-
 	//XMMATRIX planet2_moon = XMMatrixIdentity();
 	//planet2_moon = XMMatrixMultiply(planet2_moon, XMMatrixTranslation(6.5, 0, 0) * XMMatrixScaling(0.1, 0.1, 0.1) * XMMatrixRotationRollPitchYaw(0, t * 2, 0) * XMMatrixRotationRollPitchYaw(0, t * 1, 0) * XMMatrixTranslation(3, 0, 0) * XMMatrixRotationRollPitchYaw(0, t * 1.4, 0));
 	//XMStoreFloat4x4(&sceneObjects[4], planet2_moon);
-
 	////Plane object creation
 	//XMMATRIX plane = XMMatrixIdentity();
 	//plane = XMMatrixMultiply(plane, XMMatrixScaling(0.5, 0.5, 0.5) * XMMatrixTranslation(0, 0, 3));
@@ -377,6 +395,7 @@ void Application::Update()
 
 	//Enable/disable wireframe
 	cube->Update();
+	cube->SetRotation(XMFLOAT3(rotation, 0.3f, 0.3f));
 	appGFX->UpdateWireFrame();
 
 	//Switch between pyramids and cubes
@@ -402,6 +421,39 @@ void Application::Update()
 		cubeView = false;
 	}
 
+	//UpdateCameraControlls
+	// CameraControlls
+	
+
+
+	UpdateCameraControlls(deltaTime);
+	
+}
+
+void Application::UpdateCameraControlls(float deltaTime)
+{
+	//Camera controlls for W, A, S and D
+
+	//W - S
+	if (GetAsyncKeyState('W')) camera1->MoveFowardBack(10.0f * deltaTime);
+	else if (GetAsyncKeyState('S')) camera1->MoveFowardBack(-10.0f * deltaTime);
+	
+	//A - D
+	if (GetAsyncKeyState('A')) camera1->Strafe(-10.0f * deltaTime);
+	else if (GetAsyncKeyState('D')) camera1->Strafe(10.0f * deltaTime);
+	
+	
+	//if (GetAsyncKeyState(VK_UP) && camera1->momentum > 10)
+	//{
+	//	camera1->momentum += 0.5f * deltaTime;
+	//	camera1->MoveFowardBack(camera1->momentum);
+	//}
+	//else if (camera1->momentum <= 0)
+	//{
+	//	camera1->momentum -= 0.5f * deltaTime;
+	//}
+
+	camera1->UpdateViewMatrix();
 }
 
 void Application::Draw()

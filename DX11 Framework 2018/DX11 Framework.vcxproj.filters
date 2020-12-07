@@ -16,8 +16,10 @@
     <ClInclude Include="Structures.h" />
     <ClInclude Include="SceneObject.h" />
     <ClInclude Include="OBJLoader.h" />
-    <ClInclude Include="CubeObject.h" />
     <ClInclude Include="ApplicationGraphics.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Time.h" />
+    <ClInclude Include="SkyMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -25,8 +27,10 @@
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="SceneObject.cpp" />
     <ClCompile Include="OBJLoader.cpp" />
-    <ClCompile Include="CubeObject.cpp" />
     <ClCompile Include="ApplicationGraphics.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Time.cpp" />
+    <ClCompile Include="SkyMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CLInclude Include="resource.h">

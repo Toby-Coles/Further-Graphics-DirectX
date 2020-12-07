@@ -11,8 +11,12 @@
 #include "Structures.h"
 #include "SceneObject.h"
 #include "ApplicationGraphics.h"
+#include "Time.h"
+
+#include "Camera.h"
 
 #include "CubeObject.h"
+#include "SkyMap.h"
 
 
 using namespace DirectX;
@@ -42,10 +46,10 @@ private:
 
 	void GenerateGridPlain(float width, float depth, UINT m, UINT n);
 	XMFLOAT3 CalculateNormals(XMFLOAT3 vertex1, XMFLOAT3 vertex2, XMFLOAT3 vertex3);
-	 
+	void UpdateCameraControlls(float deltaTime);
 	
 	ApplicationGraphics* appGFX;
-	
+	SkyMap* skyMap;
 
 	//Scene Objects
 	std::vector<XMFLOAT4X4> sceneObjects;
@@ -53,6 +57,7 @@ private:
 	XMFLOAT4X4 gridPlane;
 
 	SceneObject* cube;
+	Camera* camera1;
 
 private:
 	
@@ -62,11 +67,13 @@ private:
 
 	HRESULT InitVertexBuffer();
 	HRESULT InitIndexBuffer();
-
+	TimeKeep* timer;
 
 	//Scene Objects
 	std::vector<SceneObject> applicationObjects;
 
+	float rotationSpeed;
+	float rotation = 0.0f;
 
 public:
 	Application();

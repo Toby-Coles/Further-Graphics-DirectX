@@ -46,17 +46,12 @@ HRESULT ApplicationGraphics::Initialize(HINSTANCE hInstance, int nCmdShow)
 	// Initialize the world matrix
 	XMStoreFloat4x4(&_world, XMMatrixIdentity());
 
-	// Initialize the view matrix
-	XMVECTOR Eye = XMVectorSet(0.0f, 0.0f, -4.5f, 0.0f);
-	XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-
-	XMStoreFloat4x4(&_view, XMMatrixLookAtLH(Eye, At, Up));
+	
 
 	// Initialize the projection matrix
-	XMStoreFloat4x4(&_projection, XMMatrixPerspectiveFovLH(XM_PIDIV2, _WindowWidth / (FLOAT)_WindowHeight, 0.01f, 100.0f));
-
-	EyePosW = XMFLOAT3(0.0f, 0.0f, -4.5);
+	
+	
+	EyePosW = XMFLOAT3(0.0f, 0.0f, 4.5);
 
 	//Initialise Lighting
 
@@ -64,10 +59,10 @@ HRESULT ApplicationGraphics::Initialize(HINSTANCE hInstance, int nCmdShow)
 	lightDirection = XMFLOAT3(0.25f, 0.5f, -1.0f);
 
 	//Diffuse material properties (RGBA)
-	diffuseMaterial = XMFLOAT4(0.8f, 0.5f, 0.5f, 1.0f);
+	diffuseMaterial = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
 
 	//Diffuse Light Colour (RGBA)
-	diffuseLight = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	diffuseLight = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
 
 	//Ambient Light
 	ambientLight = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
@@ -120,9 +115,9 @@ void ApplicationGraphics::SetIndexBuffer(ID3D11Buffer* buffer)
 void ApplicationGraphics::UpdateConstantBufferVariables(XMFLOAT4X4& position)
 {
 	ConstantBuffer cb;
-	XMMATRIX world = XMLoadFloat4x4(&position);
-	XMMATRIX view = XMLoadFloat4x4(&_view);
-	XMMATRIX projection = XMLoadFloat4x4(&_projection);
+	XMMATRIX world =XMLoadFloat4x4(&position);
+	XMMATRIX view = XMLoadFloat4x4(&_activeCamera->GetViewMatrix());
+	XMMATRIX projection = XMLoadFloat4x4(&_activeCamera->GetProjectionMatrix());
 
 
 	
@@ -138,7 +133,7 @@ void ApplicationGraphics::UpdateConstantBufferVariables(XMFLOAT4X4& position)
 	cb.SpecularMtrl = specularMaterial;
 	cb.SpecularLight = specularLight;
 	cb.SpecularPower = specularPower;
-	cb.EyePosW = EyePosW;
+	cb.EyePosW = _activeCamera->GetCameraPosition();
 
 	_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 }
@@ -165,7 +160,7 @@ void ApplicationGraphics::Present()
 void ApplicationGraphics::BindTextures(int initSlot, int count, std::vector<ID3D11ShaderResourceView*> textures)
 {
 	
-		_pImmediateContext->PSSetShaderResources(initSlot, count, &textures[0]);
+		_pImmediateContext->PSSetShaderResources(initSlot, count, &textures[initSlot]);
 	
 	
 }
@@ -232,6 +227,11 @@ ID3D11DeviceContext* ApplicationGraphics::GetContext()
 	return _pImmediateContext;
 }
 
+void ApplicationGraphics::SetCamera(Camera* camera)
+{
+	_activeCamera = camera;
+}
+
 //ConstantBuffer ApplicationGraphics::GetCB()
 //{
 //	
@@ -241,6 +241,10 @@ ID3D11DeviceContext* ApplicationGraphics::GetContext()
 XMFLOAT4X4 ApplicationGraphics::GetWorld()
 {
 	return _world;
+}
+
+void ApplicationGraphics::SetEyePosW(XMFLOAT3 eyePosW)
+{
 }
 
 
@@ -397,9 +401,7 @@ HRESULT ApplicationGraphics::InitDevice()
 	//UINT stride = sizeof(SimpleVertex);
 	//UINT offset = 0;
 	//_pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBufferCube, &stride, &offset);
-
 	//InitIndexBuffer();
-
 	// Set index buffer (initial)
 	//_pImmediateContext->IASetIndexBuffer(_pIndexBufferCube, DXGI_FORMAT_R16_UINT, 0);
 
@@ -419,7 +421,6 @@ HRESULT ApplicationGraphics::InitDevice()
 	////Load texture from file
 	//CreateDDSTextureFromFile(_pd3dDevice, L"Textures/Crate_COLOR.dds", nullptr, &p_TextureRV);
 	//_pImmediateContext->PSSetShaderResources(0, 1, &p_TextureRV);
-
 	//CreateDDSTextureFromFile(_pd3dDevice, L"Textures/Crate_SPECULAR.dds", nullptr, &p_SpecularTexture);
 	//_pImmediateContext->PSSetShaderResources(1, 1, &p_SpecularTexture);
 

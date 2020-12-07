@@ -9,6 +9,7 @@
 #include "DDSTextureLoader.h"
 #include <windowsx.h>
 #include "Structures.h"
+#include "Camera.h"
 
 using namespace DirectX;
 
@@ -21,6 +22,7 @@ struct ConstantBuffer
 	XMFLOAT4 DiffuseMtrl;
 	XMFLOAT4 DiffuseLight;
 	XMFLOAT3 LightVecW;
+
 	float dataBreak;
 
 	XMFLOAT4 AmbientLight;
@@ -67,10 +69,12 @@ public:
 	//Getters
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetContext();
-	
+	void SetCamera(Camera* camera);
 	
 	ConstantBuffer GetCB();
 	XMFLOAT4X4 GetWorld();
+
+	void SetEyePosW(XMFLOAT3 eyePosW);
 
 private:
 	void Cleanup();
@@ -99,6 +103,7 @@ private:
 	ID3D11VertexShader*		_pVertexShader;
 	ID3D11PixelShader*		_pPixelShader;
 	ID3D11InputLayout*	    _pVertexLayout;
+	Camera*			        _activeCamera;
 
 	//Diffuse Light
 	XMFLOAT3 lightDirection;

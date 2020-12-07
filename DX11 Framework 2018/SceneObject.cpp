@@ -101,7 +101,7 @@ void SceneObject::SetTransform(XMMATRIX transform)
 
 XMFLOAT4X4 SceneObject::GetTransform()
 {
-	return XMFLOAT4X4();
+	return mTransform;
 }
 
 XMFLOAT3 SceneObject::GetPosition()
@@ -124,10 +124,9 @@ void SceneObject::Draw()
 
 	appGFX->SetIndexBuffer(mMeshData.IndexBuffer);
 	appGFX->SetVertexBuffer(mMeshData.VertexBuffer);
-	for (int i = 0; i < mTextures.size(); i++)
-	{
-		appGFX->BindTextures(i, mTextures.size(), mTextures);
-	}
+
+	appGFX->BindTextures(0, mTextures.size(), mTextures);
+	
 	
 	//appGFX->InitShadersAndInputLayout();
 	

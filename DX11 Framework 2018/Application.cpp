@@ -32,7 +32,7 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	camera1->LookAt(camera1->GetCameraPosition(), XMFLOAT3(0.0f, 0.0f, 1.0f), camera1->GetCameraUp());
 
 
-	camera1->SetLens(0.25f * 3.1452f, 640 / 480, 0.01f, 100.0f);
+	camera1->SetLens(90.0f, 640 / 480, 0.01f, 1000.0f);
 	appGFX->SetEyePosW(camera1->GetCameraPosition());
 
 	//appGFX->SetPixelShader(appGFX->GetScenePixelShader());
@@ -56,9 +56,9 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	skyMap = new SceneObject(appGFX);
 
 	skyMap->LoadModelMesh("Models/sphere.obj", appGFX->GetDevice());
-	skyMap->SetPosition(XMFLOAT3(0.3f, 0.2f, 0.1f));
-	skyMap->SetScale(XMFLOAT3(10.0f, 10.0f, 10.0f));
-	skyMap->SetRotation(XMFLOAT3(0.1f, 0.1f, 0.1f));
+	skyMap->SetPosition(XMFLOAT3(0.0f, 0.0f, 5.5f));
+	skyMap->SetScale(XMFLOAT3(100.0f, 100.0f, 100.0f));
+	skyMap->SetRotation(XMFLOAT3(0.0f, 0.0f, 0.0f));
 	skyMap->GenerateTexture(L"Textures/sky.dds", appGFX->GetDevice());
 	
 
@@ -406,6 +406,8 @@ void Application::Update()
 
 	//Enable/disable wireframe
 	cube->Update();
+	skyMap->SetPosition(camera1->GetCameraPosition()); 
+	
 	skyMap->Update();
 	//skyMap->Update();
 
@@ -472,9 +474,11 @@ void Application::UpdateCameraControlls(float deltaTime)
 
 void Application::Draw()
 {
+	appGFX->SetSkyboxRasterizerState(false);
 	appGFX->ClearBackBuffer();
 	cube->Draw();
 
+	appGFX->SetSkyboxRasterizerState(true);
 	appGFX->SetPixelShader(appGFX->GetSkyboxPixelShader());
 	skyMap->Draw();
 

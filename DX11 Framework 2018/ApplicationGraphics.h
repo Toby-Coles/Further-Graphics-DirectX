@@ -87,6 +87,9 @@ public:
 
 	//ID3D11PixelShader* scenePixelShader;
 	ID3D11PixelShader* skyBoxPixelShader;
+	void SkyboxRasterizerState();
+	void SetSkyboxRasterizerState(bool cull_front);
+	
 
 private:
 	void Cleanup();
@@ -116,6 +119,11 @@ private:
 	ID3D11PixelShader*		_pPixelShader;
 	ID3D11InputLayout*	    _pVertexLayout;
 	Camera*			        _activeCamera;
+
+	ID3D11RasterizerState* _cull_front_state = nullptr;
+	ID3D11RasterizerState* _cull_back_state = nullptr;
+
+	
 
 	//Diffuse Light
 	XMFLOAT3 lightDirection;

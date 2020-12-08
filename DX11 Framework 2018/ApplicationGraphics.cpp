@@ -46,7 +46,7 @@ HRESULT ApplicationGraphics::Initialize(HINSTANCE hInstance, int nCmdShow)
 
 	// Initialize the world matrix
 	XMStoreFloat4x4(&_world, XMMatrixIdentity());
-
+	SkyboxRasterizerState();
 	
 
 	// Initialize the projection matrix
@@ -472,6 +472,32 @@ HRESULT ApplicationGraphics::InitDevice()
 }
 
 
+
+void ApplicationGraphics::SkyboxRasterizerState()
+{
+	D3D11_RASTERIZER_DESC desc = {};
+	desc.CullMode = D3D11_CULL_FRONT;
+	desc.DepthClipEnable = true;
+	desc.FillMode = D3D11_FILL_SOLID;
+
+	_pd3dDevice->CreateRasterizerState(&desc, &_cull_front_state);
+
+	desc.CullMode = D3D11_CULL_BACK;
+	_pd3dDevice->CreateRasterizerState(&desc, &_cull_back_state);
+
+}
+
+void ApplicationGraphics::SetSkyboxRasterizerState(bool cull_front)
+{
+	if (cull_front)
+	{
+		_pImmediateContext->RSSetState(_cull_front_state);
+	}
+	else
+	{
+		_pImmediateContext->RSSetState(_cull_back_state);
+	}
+}
 
 void ApplicationGraphics::Cleanup()
 {

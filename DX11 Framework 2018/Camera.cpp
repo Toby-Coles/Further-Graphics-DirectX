@@ -120,7 +120,6 @@ void Camera::SetCameraPosition(XMFLOAT3 position)
 }
 
 
-
 void Camera::SetCameraLookAtPoint(XMFLOAT3 lookAt)
 {
 	_look = lookAt;

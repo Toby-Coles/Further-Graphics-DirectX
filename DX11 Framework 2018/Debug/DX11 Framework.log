@@ -1,6 +1,21 @@
 ﻿  Application.cpp
 C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\CubeObject.h(8,34): warning C4100: 'graphics': unreferenced formal parameter
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(284,27): warning C4244: '=': conversion from 'UINT' to '_Ty', possible loss of data
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(281,27): warning C4244: '=': conversion from 'UINT' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=unsigned short
+          ]
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(282,35): warning C4244: '=': conversion from 'UINT' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=unsigned short
+          ]
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(283,37): warning C4244: '=': conversion from 'UINT' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=unsigned short
+          ]
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(284,37): warning C4244: '=': conversion from 'UINT' to '_Ty', possible loss of data
           with
           [
               _Ty=unsigned short
@@ -10,30 +25,15 @@ C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Grap
           [
               _Ty=unsigned short
           ]
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(286,37): warning C4244: '=': conversion from 'UINT' to '_Ty', possible loss of data
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(286,41): warning C4244: '=': conversion from 'UINT' to '_Ty', possible loss of data
           with
           [
               _Ty=unsigned short
           ]
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(287,37): warning C4244: '=': conversion from 'UINT' to '_Ty', possible loss of data
-          with
-          [
-              _Ty=unsigned short
-          ]
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(288,35): warning C4244: '=': conversion from 'UINT' to '_Ty', possible loss of data
-          with
-          [
-              _Ty=unsigned short
-          ]
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(289,41): warning C4244: '=': conversion from 'UINT' to '_Ty', possible loss of data
-          with
-          [
-              _Ty=unsigned short
-          ]
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(241,8): warning C4189: 'du': local variable is initialized but not referenced
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(242,8): warning C4189: 'dv': local variable is initialized but not referenced
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(422,8): warning C4189: 'offset': local variable is initialized but not referenced
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(421,8): warning C4189: 'stride': local variable is initialized but not referenced
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(432,8): warning C4189: 'offset': local variable is initialized but not referenced
-C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(431,8): warning C4189: 'stride': local variable is initialized but not referenced
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(238,8): warning C4189: 'du': local variable is initialized but not referenced
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(239,8): warning C4189: 'dv': local variable is initialized but not referenced
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(421,8): warning C4189: 'offset': local variable is initialized but not referenced
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(420,8): warning C4189: 'stride': local variable is initialized but not referenced
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(431,8): warning C4189: 'offset': local variable is initialized but not referenced
+C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Application.cpp(430,8): warning C4189: 'stride': local variable is initialized but not referenced
   DX11 Framework.vcxproj -> C:\Users\tobyc\OneDrive - Staffordshire University\Year 2\Further Games and Graphical Concepts\Github\Further-Graphics-DirectX\DX11 Framework 2018\Debug\DX11 Framework.exe

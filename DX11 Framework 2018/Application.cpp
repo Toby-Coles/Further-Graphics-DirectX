@@ -21,11 +21,9 @@ Application::~Application()
 HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 {
 	appGFX = new ApplicationGraphics();
-	appGFX->Initialize(hInstance, nCmdShow);
-	skyMap = new SkyMap();
-	
-	//skyMap->LoadModelMesh("Models/sphere.obj", appGFX->GetDevice());
+	appGFX->Initialize(hInstance, nCmdShow);//skyMap->LoadModelMesh("Models/sphere.obj", appGFX->GetDevice());
 	//camera1 = new Camera(XMFLOAT3(0.0f, 0.0f, 5.5f), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 1.0f, 0.0f), 640.0f, 480.0f, 0.1f, 100.0f);
+	
 	camera1 = new Camera();
 	appGFX->SetCamera(camera1);
 	
@@ -37,6 +35,7 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	camera1->SetLens(0.25f * 3.1452f, 640 / 480, 0.01f, 100.0f);
 	appGFX->SetEyePosW(camera1->GetCameraPosition());
 
+	//appGFX->SetPixelShader(appGFX->GetScenePixelShader());
 	cube = new SceneObject(appGFX);
 	//cube->SetDevice(appGFX->GetDevice());
 	//cube->SetMeshData(objloader::load(Jsonobj1, deviceContext);
@@ -50,6 +49,18 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	cube->GenerateTexture(L"Textures/Crate_SPECULAR.dds", appGFX->GetDevice());
 
 	camera1->UpdateViewMatrix();
+
+	//appGFX->CompileAndSetPixelShader("SkyBoxShader.fx");
+	
+	//appGFX->SetPixelShader(appGFX->GetSkyboxPixelShader());
+	skyMap = new SceneObject(appGFX);
+
+	skyMap->LoadModelMesh("Models/sphere.obj", appGFX->GetDevice());
+	skyMap->SetPosition(XMFLOAT3(0.3f, 0.2f, 0.1f));
+	skyMap->SetScale(XMFLOAT3(10.0f, 10.0f, 10.0f));
+	skyMap->SetRotation(XMFLOAT3(0.1f, 0.1f, 0.1f));
+	skyMap->GenerateTexture(L"Textures/sky.dds", appGFX->GetDevice());
+	
 
 	timer = new TimeKeep();
 	timer->Reset();
@@ -395,6 +406,9 @@ void Application::Update()
 
 	//Enable/disable wireframe
 	cube->Update();
+	skyMap->Update();
+	//skyMap->Update();
+
 	cube->SetRotation(XMFLOAT3(rotation, 0.3f, 0.3f));
 	appGFX->UpdateWireFrame();
 
@@ -460,6 +474,11 @@ void Application::Draw()
 {
 	appGFX->ClearBackBuffer();
 	cube->Draw();
+
+	appGFX->SetPixelShader(appGFX->GetSkyboxPixelShader());
+	skyMap->Draw();
+
+	//skyMap->Draw();
 
 	appGFX->Present();
 

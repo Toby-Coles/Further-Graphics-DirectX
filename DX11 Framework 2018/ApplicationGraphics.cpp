@@ -15,6 +15,7 @@ ApplicationGraphics::ApplicationGraphics()
 	_pConstantBuffer = nullptr;
 	_pVertexShader = nullptr;
 	_pPixelShader = nullptr;
+	skyBoxPixelShader = nullptr;
 	_pVertexLayout = nullptr;
 	wireFrame = false;
 }
@@ -208,11 +209,21 @@ float ApplicationGraphics::TimerUpdate(float t)
 	
 }
 
-void ApplicationGraphics::SetShaders(ID3D11VertexShader* vs, ID3D11PixelShader* ps)
+//void ApplicationGraphics::SetShaders(ID3D11VertexShader* vs, ID3D11PixelShader* ps)
+//{
+//	//Set Shaders
+//	
+//	
+//}
+
+void ApplicationGraphics::SetVertexShader(ID3D11VertexShader* vs)
 {
-	//Set Shaders
 	_pImmediateContext->VSSetShader(vs, nullptr, 0);
 	_pImmediateContext->VSSetConstantBuffers(0, 1, &_pConstantBuffer);
+}
+
+void ApplicationGraphics::SetPixelShader(ID3D11PixelShader* ps)
+{
 	_pImmediateContext->PSSetConstantBuffers(0, 1, &_pConstantBuffer);
 	_pImmediateContext->PSSetShader(ps, nullptr, 0);
 }
@@ -241,6 +252,16 @@ void ApplicationGraphics::SetCamera(Camera* camera)
 XMFLOAT4X4 ApplicationGraphics::GetWorld()
 {
 	return _world;
+}
+
+ID3D11PixelShader* ApplicationGraphics::GetScenePixelShader()
+{
+	return _pPixelShader;
+}
+
+ID3D11PixelShader* ApplicationGraphics::GetSkyboxPixelShader()
+{
+	return skyBoxPixelShader;
 }
 
 void ApplicationGraphics::SetEyePosW(XMFLOAT3 eyePosW)
@@ -393,7 +414,10 @@ HRESULT ApplicationGraphics::InitDevice()
 	bd.CPUAccessFlags = 0;
 	hr = _pd3dDevice->CreateBuffer(&bd, nullptr, &_pConstantBuffer);
 
-	SetShaders(_pVertexShader, _pPixelShader);
+
+	SetVertexShader(_pVertexShader);
+	SetPixelShader(_pPixelShader);
+
 
 	//InitVertexBuffer();
 
@@ -522,23 +546,9 @@ HRESULT ApplicationGraphics::InitShadersAndInputLayout()
 		return hr;
 	}
 
-	// Compile the pixel shader
-	ID3DBlob* pPSBlob = nullptr;
-	hr = CompileShaderFromFile(L"DX11 Framework.fx", "PS", "ps_4_0", &pPSBlob);
-
-	if (FAILED(hr))
-	{
-		MessageBox(nullptr,
-			L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK);
-		return hr;
-	}
-
-	// Create the pixel shader
-	hr = _pd3dDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &_pPixelShader);
-	pPSBlob->Release();
-
-	if (FAILED(hr))
-		return hr;
+	CompileAndSetPixelShader(hr, L"DX11 Framework.fx", &_pPixelShader);
+	CompileAndSetPixelShader(hr, L"SkyBoxShader.fx", &skyBoxPixelShader);
+	
 
 	// Define the input layout
 	D3D11_INPUT_ELEMENT_DESC layout[] =
@@ -561,6 +571,29 @@ HRESULT ApplicationGraphics::InitShadersAndInputLayout()
 	// Set the input layout
 	_pImmediateContext->IASetInputLayout(_pVertexLayout);
 	
+
+	return hr;
+}
+
+HRESULT ApplicationGraphics::CompileAndSetPixelShader(HRESULT hr, WCHAR* fileName, ID3D11PixelShader** pShader) {
+	
+	
+
+	// Compile the pixel shader
+	ID3DBlob* pPSBlob = nullptr;
+	hr = CompileShaderFromFile(fileName, "PS", "ps_4_0", &pPSBlob);
+
+	if (FAILED(hr))
+	{
+		MessageBox(nullptr,
+			L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK);
+		return hr;
+	}
+
+	// Create the pixel shader
+	hr = _pd3dDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, pShader);
+	pPSBlob->Release();
+
 
 	return hr;
 }

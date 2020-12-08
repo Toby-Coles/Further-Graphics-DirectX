@@ -44,6 +44,8 @@ public:
 	HRESULT Initialize(HINSTANCE hInstance, int nCmdShow);
 	HRESULT InitShadersAndInputLayout();
 
+	HRESULT CompileAndSetPixelShader(HRESULT hr, WCHAR* fileName, ID3D11PixelShader** pShader);
+
 	//Buffers
 	void SetVertexBuffer(ID3D11Buffer* buffer);
 	void SetIndexBuffer(ID3D11Buffer* buffer);
@@ -64,7 +66,9 @@ public:
 
 
 	//Shaders
-	void SetShaders(ID3D11VertexShader* vs, ID3D11PixelShader* ps);
+	//void SetShaders(ID3D11VertexShader* vs, ID3D11PixelShader* ps);
+	void SetVertexShader(ID3D11VertexShader* vs);
+	void SetPixelShader(ID3D11PixelShader* ps);
 
 	//Getters
 	ID3D11Device* GetDevice();
@@ -74,7 +78,15 @@ public:
 	ConstantBuffer GetCB();
 	XMFLOAT4X4 GetWorld();
 
+	ID3D11PixelShader* GetScenePixelShader();
+	ID3D11PixelShader* GetSkyboxPixelShader();
+
+
+
 	void SetEyePosW(XMFLOAT3 eyePosW);
+
+	//ID3D11PixelShader* scenePixelShader;
+	ID3D11PixelShader* skyBoxPixelShader;
 
 private:
 	void Cleanup();
@@ -136,6 +148,9 @@ private:
 
 	//Texture Sampler
 	ID3D11SamplerState* _pSamplerLinear = nullptr;
+
+	//Pixel Shaders
+	
 
 
 

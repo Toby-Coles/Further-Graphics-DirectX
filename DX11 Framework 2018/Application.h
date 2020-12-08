@@ -16,7 +16,6 @@
 #include "Camera.h"
 
 #include "CubeObject.h"
-#include "SkyMap.h"
 
 
 using namespace DirectX;
@@ -49,7 +48,7 @@ private:
 	void UpdateCameraControlls(float deltaTime);
 	
 	ApplicationGraphics* appGFX;
-	SkyMap* skyMap;
+	SceneObject* skyMap;
 
 	//Scene Objects
 	std::vector<XMFLOAT4X4> sceneObjects;

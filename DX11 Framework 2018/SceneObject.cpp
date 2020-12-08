@@ -125,7 +125,11 @@ void SceneObject::Draw()
 	appGFX->SetIndexBuffer(mMeshData.IndexBuffer);
 	appGFX->SetVertexBuffer(mMeshData.VertexBuffer);
 
-	appGFX->BindTextures(0, mTextures.size(), mTextures);
+	for (int i = 0; i < mTextures.size(); i++)
+	{
+		appGFX->BindTextures(i, 1, mTextures);
+	}
+	
 	
 	
 	//appGFX->InitShadersAndInputLayout();

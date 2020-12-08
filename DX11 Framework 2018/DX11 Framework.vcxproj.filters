@@ -19,7 +19,6 @@
     <ClInclude Include="ApplicationGraphics.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Time.h" />
-    <ClInclude Include="SkyMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -30,7 +29,6 @@
     <ClCompile Include="ApplicationGraphics.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Time.cpp" />
-    <ClCompile Include="SkyMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CLInclude Include="resource.h">
@@ -39,6 +37,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="DX11 Framework.fx">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="SkyBoxShader.fx">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

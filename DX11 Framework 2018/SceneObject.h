@@ -37,6 +37,7 @@ public:
 	XMFLOAT3 GetScale();
 
 	virtual void Draw();
+	virtual void Draw(ID3D11Buffer* vertexBuffer, ID3D11Buffer* indexBuffer, UINT indexCount);
 	void Update(); 
 	void Initialise();
 

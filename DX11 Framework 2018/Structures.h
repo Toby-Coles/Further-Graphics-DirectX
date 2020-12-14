@@ -10,7 +10,7 @@
 #include <vector>
 
 
-
+//Simple vertex struct to be used for the application and the OBJ loader
 struct SimpleVertex
 {
 

@@ -10,9 +10,12 @@
 #include <windowsx.h>
 #include "Structures.h"
 #include "Camera.h"
+#include "LightStructs.h"
+
 
 using namespace DirectX;
 
+//Define constant buffer variables, these will relate to those in the shader file
 struct ConstantBuffer
 {
 	XMMATRIX mWorld;
@@ -32,7 +35,13 @@ struct ConstantBuffer
 	XMFLOAT4 SpecularLight;
 	float SpecularPower;
 	XMFLOAT3 EyePosW;
+
+	Material material;
+	PointLight PointLight;
+	SpotLight SpotLight;
 };
+
+
 
 class ApplicationGraphics
 {
@@ -51,7 +60,7 @@ public:
 	void SetIndexBuffer(ID3D11Buffer* buffer);
 	void UpdateConstantBufferVariables(XMFLOAT4X4& position);
 	void ClearBackBuffer();
-
+	
 
 	//Drawing
 	void Draw(unsigned int indexCount);
@@ -60,7 +69,8 @@ public:
 
 
 	//Wireframe
-	void UpdateWireFrame();
+	bool UpdateWireFrame();
+	void SetWireFrame(bool state);
 	
 	float TimerUpdate(float t);
 
@@ -81,7 +91,8 @@ public:
 	ID3D11PixelShader* GetScenePixelShader();
 	ID3D11PixelShader* GetSkyboxPixelShader();
 
-
+	
+	
 
 	void SetEyePosW(XMFLOAT3 eyePosW);
 
@@ -89,7 +100,11 @@ public:
 	ID3D11PixelShader* skyBoxPixelShader;
 	void SkyboxRasterizerState();
 	void SetSkyboxRasterizerState(bool cull_front);
-	
+	//Lighting
+	void UpdateLighting();
+	//Point Light
+	PointLight _pointLight;
+	SpotLight _spotLight;
 
 private:
 	void Cleanup();
@@ -139,6 +154,8 @@ private:
 	XMFLOAT4 specularLight;
 	float specularPower;
 	XMFLOAT3 EyePosW;
+
+	
 
 	bool wireFrame;
 	float keyPressTimer;

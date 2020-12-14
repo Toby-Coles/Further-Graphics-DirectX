@@ -384,6 +384,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="DX11 Framework.cpp" />
+    <ClCompile Include="GroundPlane.cpp" />
     <ClCompile Include="OBJLoader.cpp" />
     <ClCompile Include="SceneObject.cpp" />
     <ClCompile Include="Time.cpp" />
@@ -395,7 +396,10 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="ApplicationGraphics.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CursorPoint.h" />
     <ClInclude Include="DDSTextureLoader.h" />
+    <ClInclude Include="GroundPlane.h" />
+    <ClInclude Include="LightStructs.h" />
     <ClInclude Include="OBJLoader.h" />
     <CLInclude Include="resource.h" />
     <ClInclude Include="SceneObject.h" />
@@ -404,6 +408,9 @@
     <ResourceCompile Include="DX11 Framework.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="LightShading.fx">
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

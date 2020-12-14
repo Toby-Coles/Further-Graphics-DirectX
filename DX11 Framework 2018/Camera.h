@@ -42,6 +42,7 @@ public:
 	XMVECTOR GetCameraVecPosition();
 
 	XMFLOAT3 GetCameraLookAtPoint();
+	XMVECTOR GetLookAtVec();
 	XMFLOAT3 GetCameraUp();
 
 	void MoveFowardBack(float d);

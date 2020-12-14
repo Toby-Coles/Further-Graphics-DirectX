@@ -60,6 +60,7 @@ void TimeKeep::Start()
 
 }
 
+//Stop the timer
 void TimeKeep::Stop()
 {
 	if (!mIsStopped)
@@ -71,6 +72,7 @@ void TimeKeep::Stop()
 	}
 }
 
+//Timer tick, updated every frame and keeps the timer increasing
 void TimeKeep::Tick()
 {
 	if (mIsStopped)

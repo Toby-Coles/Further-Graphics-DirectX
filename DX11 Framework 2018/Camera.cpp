@@ -1,8 +1,5 @@
 #include "Camera.h"
 
-
-
-
 Camera::Camera() {
 	momentum = 0.0f;
 	InitializeCamera();
@@ -12,20 +9,7 @@ Camera::~Camera()
 {
 }
 
-//void Camera::Update()
-//{
-//	//Update View Matrix
-//	XMVECTOR Eye = XMVectorSet(_position.x, _position.y, _position.z, 0.0f);
-//	XMVECTOR At = XMVectorSet( _look.x, _look.y,_look.z, 0.0f);
-//	XMVECTOR Up = XMVectorSet(_up.x, _up.y, _up.z, 0.0f);
-//	 
-//
-//	XMStoreFloat4x4(&_view, XMMatrixLookAtLH(Eye, At, Up));
-//
-//	
-//	//Update Projection Matrix
-//	XMStoreFloat4x4(&_projection, XMMatrixPerspectiveFovLH(XM_PIDIV2, _windowWidth / (FLOAT)_windowHeight, _nearDepth, _farDepth));
-//}
+
 
 void Camera::SetLens(float fovY, float aspect, float zNear, float zFar) {
 	//Cache properties
@@ -63,15 +47,15 @@ void Camera::UpdateViewMatrix()
 
 	R = XMVector3Cross(U, L);
 
-	//
 	// Fill in the view matrix entries.
-	//
 	float x = -XMVectorGetX(XMVector3Dot(P, R));
 	float y = -XMVectorGetX(XMVector3Dot(P, U));
 	float z = -XMVectorGetX(XMVector3Dot(P, L));
+
 	XMStoreFloat3(&_right, R);
 	XMStoreFloat3(&_up, U);
 	XMStoreFloat3(&_look, L);
+
 	_view(0, 0) = _right.x;
 	_view(1, 0) = _right.y;
 	_view(2, 0) = _right.z;
@@ -163,6 +147,11 @@ XMFLOAT3 Camera::GetCameraLookAtPoint()
 	return _look;
 }
 
+XMVECTOR Camera::GetLookAtVec()
+{
+	return XMLoadFloat3(&_look);
+}
+
 XMFLOAT3 Camera::GetCameraUp()
 {
 	return _up;
@@ -185,13 +174,21 @@ void Camera::Strafe(float d)
 	XMStoreFloat3(&_position, XMVectorMultiplyAdd(s, r, p));
 
 }
-void Camera::Pitch(float angle) {
+void Camera::Pitch(float angle)
+{
 	XMMATRIX R = XMMatrixRotationAxis(XMLoadFloat3(&_right), angle);
 	XMStoreFloat3(&_up, XMVector3TransformNormal(XMLoadFloat3(&_up), R));
 	XMStoreFloat3(&_look, XMVector3TransformNormal(XMLoadFloat3(&_look), R));
 
 }
-void Camera::RotateY(float angle) {
+
+void Camera::RotateY(float angle)
+{
+	// Rotate the basis vectors about the world y-axis.
+	XMMATRIX R = XMMatrixRotationY(angle);
+	XMStoreFloat3(&_right, XMVector3TransformNormal(XMLoadFloat3(&_right), R));
+	XMStoreFloat3(&_up, XMVector3TransformNormal(XMLoadFloat3(&_up), R));
+	XMStoreFloat3(&_look, XMVector3TransformNormal(XMLoadFloat3(&_look), R));
 
 }
 
@@ -214,8 +211,4 @@ void Camera::InitializeCamera()
 	_right = XMFLOAT3(1.0f, 0.0f, 0.0f);
 	_up = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	_look = XMFLOAT3(0.0f, 0.0f, 1.0f);
-	
-
-	
-
 }

@@ -3,6 +3,7 @@
 
 ApplicationGraphics::ApplicationGraphics()
 {
+	//Initialise Variables
 	_hInst = nullptr;
 	_hWnd = nullptr;
 	_driverType = D3D_DRIVER_TYPE_NULL;
@@ -26,7 +27,7 @@ ApplicationGraphics::~ApplicationGraphics()
 
 HRESULT ApplicationGraphics::Initialize(HINSTANCE hInstance, int nCmdShow)
 {
-
+	//initialise the window
 	if (FAILED(InitWindow(hInstance, nCmdShow)))
 	{
 		return E_FAIL;
@@ -47,17 +48,13 @@ HRESULT ApplicationGraphics::Initialize(HINSTANCE hInstance, int nCmdShow)
 	// Initialize the world matrix
 	XMStoreFloat4x4(&_world, XMMatrixIdentity());
 	SkyboxRasterizerState();
-	
-
-	// Initialize the projection matrix
-	
-	
-	EyePosW = XMFLOAT3(0.0f, 0.0f, 4.5);
+		
+	//EyePosW = XMFLOAT3(0.0f, 0.0f, 4.5);
 
 	//Initialise Lighting
 
 	//Light Direction from surface
-	lightDirection = XMFLOAT3(0.25f, 0.5f, -1.0f);
+	lightDirection = XMFLOAT3(0.25f, 0.5f, 1.0f);
 
 	//Diffuse material properties (RGBA)
 	diffuseMaterial = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
@@ -66,7 +63,7 @@ HRESULT ApplicationGraphics::Initialize(HINSTANCE hInstance, int nCmdShow)
 	diffuseLight = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
 
 	//Ambient Light
-	ambientLight = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
+	ambientLight = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
 	ambientMateral = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
 
 	//Specular Light
@@ -74,7 +71,40 @@ HRESULT ApplicationGraphics::Initialize(HINSTANCE hInstance, int nCmdShow)
 	specularMaterial = XMFLOAT4(0.4f, 0.4f, 0.4f, 1.0f);
 	specularPower = 10.0f;
 
+	
+	
+
+
+
 	return S_OK;
+}
+
+void ApplicationGraphics::UpdateLighting() {
+	//Point Light
+	_pointLight.Ambient = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
+	_pointLight.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	_pointLight.Specular = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
+	_pointLight.Attenuation = XMFLOAT3(0.0f, 0.1f, 0.0f);
+	_pointLight.Position = XMFLOAT3(0.0f, 0.0f, 10.0f);
+	_pointLight.Range = 30.0f;
+
+	//SpotLight
+	_spotLight.Ambient = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
+	_spotLight.Diffuse = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	_spotLight.Specular = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
+	_spotLight.Attenuation = XMFLOAT3(1.0f, 0.0f, 0.0f);
+	_spotLight.Spot = 96.0f;
+	_spotLight.Range = 15.0f;
+
+	_spotLight.Position = _activeCamera->GetCameraPosition();
+
+	//_spotLight.Direction = _activeCamera->GetCameraLookAtPoint();
+
+	XMStoreFloat3(&_spotLight.Direction, XMVector3Normalize(_activeCamera->GetLookAtVec() - _activeCamera->GetCameraVecPosition()));
+
+
+	
+
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -99,6 +129,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	return 0;
 }
+
 
 void ApplicationGraphics::SetVertexBuffer(ID3D11Buffer* buffer)
 {
@@ -135,6 +166,21 @@ void ApplicationGraphics::UpdateConstantBufferVariables(XMFLOAT4X4& position)
 	cb.SpecularLight = specularLight;
 	cb.SpecularPower = specularPower;
 	cb.EyePosW = _activeCamera->GetCameraPosition();
+	cb.PointLight.Position = _activeCamera->GetCameraPosition();
+
+	cb.material.Ambient = XMFLOAT4(0.4f, 0.4f, 0.4f, 1.0f);
+	cb.material.Diffuse = XMFLOAT4(0.9f, 0.9f, 0.9f, 1.0f);
+	cb.material.Specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+
+
+	cb.PointLight = _pointLight;
+	cb.PointLight.Position = _pointLight.Position;
+
+	if (GetAsyncKeyState('Z'))
+	{
+		cb.SpotLight = _spotLight;
+	}
+	
 
 	_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 }
@@ -166,15 +212,18 @@ void ApplicationGraphics::BindTextures(int initSlot, int count, std::vector<ID3D
 	
 }
 
-void ApplicationGraphics::UpdateWireFrame()
+//Key polling for wireframe 
+bool ApplicationGraphics::UpdateWireFrame()
 {
 	if (GetAsyncKeyState(VK_F1))
 	{
 
 		if (wireFrame == false)
 		{
-			_pImmediateContext->RSSetState(_wireFrame);
+			//_pImmediateContext->RSSetState(_wireFrame);
 			wireFrame = true;
+			return true;
+			
 		}
 	}
 
@@ -182,10 +231,27 @@ void ApplicationGraphics::UpdateWireFrame()
 	{
 		if (wireFrame == true)
 		{
-			_pImmediateContext->RSSetState(nullptr);
+			
 			wireFrame = false;
+			return false;
 		}
 	}
+
+	
+	
+}
+
+void ApplicationGraphics::SetWireFrame(bool state) {
+
+	if (state)
+	{
+		_pImmediateContext->RSSetState(_wireFrame);
+	}
+	else
+	{
+		_pImmediateContext->RSSetState(nullptr);
+	}
+	
 }
 
 float ApplicationGraphics::TimerUpdate(float t)
@@ -209,12 +275,7 @@ float ApplicationGraphics::TimerUpdate(float t)
 	
 }
 
-//void ApplicationGraphics::SetShaders(ID3D11VertexShader* vs, ID3D11PixelShader* ps)
-//{
-//	//Set Shaders
-//	
-//	
-//}
+
 
 void ApplicationGraphics::SetVertexShader(ID3D11VertexShader* vs)
 {
@@ -243,11 +304,7 @@ void ApplicationGraphics::SetCamera(Camera* camera)
 	_activeCamera = camera;
 }
 
-//ConstantBuffer ApplicationGraphics::GetCB()
-//{
-//	
-//	return cb;
-//}
+
 
 XMFLOAT4X4 ApplicationGraphics::GetWorld()
 {
@@ -264,9 +321,7 @@ ID3D11PixelShader* ApplicationGraphics::GetSkyboxPixelShader()
 	return skyBoxPixelShader;
 }
 
-void ApplicationGraphics::SetEyePosW(XMFLOAT3 eyePosW)
-{
-}
+
 
 
 HRESULT ApplicationGraphics::InitWindow(HINSTANCE hInstance, int nCmdShow)
@@ -290,7 +345,7 @@ HRESULT ApplicationGraphics::InitWindow(HINSTANCE hInstance, int nCmdShow)
 
 	// Create window
 	_hInst = hInstance;
-	RECT rc = { 0, 0, 640, 480 };
+	RECT rc = { 0, 0, 1920, 1080 };
 	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 	_hWnd = CreateWindow(L"TutorialWindowClass", L"DX11 Framework", WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance,
@@ -414,26 +469,12 @@ HRESULT ApplicationGraphics::InitDevice()
 	bd.CPUAccessFlags = 0;
 	hr = _pd3dDevice->CreateBuffer(&bd, nullptr, &_pConstantBuffer);
 
-
+	//Set shaders
 	SetVertexShader(_pVertexShader);
 	SetPixelShader(_pPixelShader);
 
-
-	//InitVertexBuffer();
-
-	//// Set vertex buffer (initial)
-	//UINT stride = sizeof(SimpleVertex);
-	//UINT offset = 0;
-	//_pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBufferCube, &stride, &offset);
-	//InitIndexBuffer();
-	// Set index buffer (initial)
-	//_pImmediateContext->IASetIndexBuffer(_pIndexBufferCube, DXGI_FORMAT_R16_UINT, 0);
-
 	// Set primitive topology
 	_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	
-
 
 	//Set up Wireframe
 	D3D11_RASTERIZER_DESC wfdesc;
@@ -442,11 +483,6 @@ HRESULT ApplicationGraphics::InitDevice()
 	wfdesc.CullMode = D3D11_CULL_NONE;
 	hr = _pd3dDevice->CreateRasterizerState(&wfdesc, &_wireFrame);
 
-	////Load texture from file
-	//CreateDDSTextureFromFile(_pd3dDevice, L"Textures/Crate_COLOR.dds", nullptr, &p_TextureRV);
-	//_pImmediateContext->PSSetShaderResources(0, 1, &p_TextureRV);
-	//CreateDDSTextureFromFile(_pd3dDevice, L"Textures/Crate_SPECULAR.dds", nullptr, &p_SpecularTexture);
-	//_pImmediateContext->PSSetShaderResources(1, 1, &p_SpecularTexture);
 
 	//Create Sampler
 	D3D11_SAMPLER_DESC samplerDesc;
@@ -473,8 +509,14 @@ HRESULT ApplicationGraphics::InitDevice()
 
 
 
+void ApplicationGraphics::SetEyePosW(XMFLOAT3 eyePosW)
+{
+	EyePosW = eyePosW;
+}
+
 void ApplicationGraphics::SkyboxRasterizerState()
 {
+	//Define the rasterizer states for changing in order to render the skybox properly
 	D3D11_RASTERIZER_DESC desc = {};
 	desc.CullMode = D3D11_CULL_FRONT;
 	desc.DepthClipEnable = true;
@@ -486,6 +528,7 @@ void ApplicationGraphics::SkyboxRasterizerState()
 	_pd3dDevice->CreateRasterizerState(&desc, &_cull_back_state);
 
 }
+
 
 void ApplicationGraphics::SetSkyboxRasterizerState(bool cull_front)
 {
@@ -513,7 +556,7 @@ void ApplicationGraphics::Cleanup()
 	if (_pd3dDevice) _pd3dDevice->Release();
 	if (_depthStencilView) _depthStencilView->Release();
 	if (_depthStencilBuffer) _depthStencilBuffer->Release();
-	if (_wireFrame) _wireFrame->Release();
+	//if (_wireFrame) _wireFrame->Release();
 }
 
 HRESULT ApplicationGraphics::CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
@@ -530,7 +573,7 @@ HRESULT ApplicationGraphics::CompileShaderFromFile(WCHAR* szFileName, LPCSTR szE
 #endif
 
 	ID3DBlob* pErrorBlob;
-	hr = D3DCompileFromFile(szFileName, nullptr, nullptr, szEntryPoint, szShaderModel,
+	hr = D3DCompileFromFile(szFileName, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, szEntryPoint, szShaderModel,
 		dwShaderFlags, 0, ppBlobOut, &pErrorBlob);
 
 	if (FAILED(hr))
@@ -555,6 +598,7 @@ HRESULT ApplicationGraphics::InitShadersAndInputLayout()
 	// Compile the vertex shader
 	ID3DBlob* pVSBlob = nullptr;
 	hr = CompileShaderFromFile(L"DX11 Framework.fx", "VS", "vs_4_0", &pVSBlob);
+	
 
 	if (FAILED(hr))
 	{

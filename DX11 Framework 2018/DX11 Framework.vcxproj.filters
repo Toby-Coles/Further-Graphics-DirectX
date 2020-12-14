@@ -19,6 +19,9 @@
     <ClInclude Include="ApplicationGraphics.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Time.h" />
+    <ClInclude Include="CursorPoint.h" />
+    <ClInclude Include="LightStructs.h" />
+    <ClInclude Include="GroundPlane.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -29,6 +32,7 @@
     <ClCompile Include="ApplicationGraphics.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Time.cpp" />
+    <ClCompile Include="GroundPlane.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CLInclude Include="resource.h">
@@ -40,6 +44,9 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="SkyBoxShader.fx">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="LightShading.fx">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

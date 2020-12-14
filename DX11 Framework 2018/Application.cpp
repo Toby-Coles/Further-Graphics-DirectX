@@ -5,12 +5,19 @@
 
 Application::Application()
 {
+	//initialise variables 
 	_pVertexBufferCube = nullptr;
 	_pIndexBufferCube = nullptr;
 	_pVertexBufferPyramid = nullptr;
 	_pIndexBufferPyramid = nullptr;
 	cubeView = true;
 	pyramidView = false;
+	appGFX = nullptr;
+	skyMap = nullptr;
+	cube = nullptr;
+	earth = nullptr;
+	camera1 = nullptr;
+
 }
 
 Application::~Application()
@@ -20,61 +27,77 @@ Application::~Application()
 
 HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 {
+	//Initialise graphics object, used for referencing its functionability to be used in the application
 	appGFX = new ApplicationGraphics();
-	appGFX->Initialize(hInstance, nCmdShow);//skyMap->LoadModelMesh("Models/sphere.obj", appGFX->GetDevice());
-	//camera1 = new Camera(XMFLOAT3(0.0f, 0.0f, 5.5f), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 1.0f, 0.0f), 640.0f, 480.0f, 0.1f, 100.0f);
+	appGFX->Initialize(hInstance, nCmdShow);
 	
+	//Create and set variables for the camera object and set the current active camera in the program
 	camera1 = new Camera();
-	appGFX->SetCamera(camera1);
-	
-	camera1->SetCameraPosition(XMFLOAT3(0.0f, 0.0f, 5.5f));
-	//camera1->SetCameraLookAtPoint(XMFLOAT3(0.0f, 0.0f, 1.0f));
+	appGFX->SetCamera(camera1);     
+	camera1->SetCameraPosition(XMFLOAT3(0.0f, 0.0f, 15.5f));
 	camera1->LookAt(camera1->GetCameraPosition(), XMFLOAT3(0.0f, 0.0f, 1.0f), camera1->GetCameraUp());
+	camera1->SetLens(90.0f, 1920 /1080, 0.01f, 1000.0f);
 
+	
 
-	camera1->SetLens(90.0f, 640 / 480, 0.01f, 1000.0f);
-	appGFX->SetEyePosW(camera1->GetCameraPosition());
-
-	//appGFX->SetPixelShader(appGFX->GetScenePixelShader());
+	//Create the object for the crate cube in the scene (ATTEMPT REPLACE WITH LOAD IN FILE)
 	cube = new SceneObject(appGFX);
-	//cube->SetDevice(appGFX->GetDevice());
-	//cube->SetMeshData(objloader::load(Jsonobj1, deviceContext);
 	cube->LoadModelMesh("Models/cube.obj", appGFX->GetDevice());
-
-	cube->SetPosition(XMFLOAT3(0.3f, 0.2f, 0.1f));
+	cube->SetPosition(XMFLOAT3(15.3f, 0.2f, 0.1f));
 	cube->SetScale(XMFLOAT3(1.0f, 1.0f, 1.0f));
 	cube->SetRotation(XMFLOAT3(0.1f, 0.1f, 0.1f));
-
 	cube->GenerateTexture(L"Textures/Crate_COLOR.dds", appGFX->GetDevice());
-	cube->GenerateTexture(L"Textures/Crate_SPECULAR.dds", appGFX->GetDevice());
+	cube->GenerateTexture(L"Textures/Crate_SPEC.dds", appGFX->GetDevice());
 
+	//Create the earth object in the scene (ATTEMPT REPLACE WITH LOAD IN FILE)
+	earth = new SceneObject(appGFX);
+	earth->LoadModelMesh("Models/sphere2.obj", appGFX->GetDevice());
+	earth->SetPosition(XMFLOAT3(0.0f, 0.0f, 0.0f));
+	earth->SetScale(XMFLOAT3(10.0f, 10.0f, 10.0f));
+	earth->GenerateTexture(L"Textures/earth_color.dds", appGFX->GetDevice());
+	earth->GenerateTexture(L"Textures/earth_spec.dds", appGFX->GetDevice());
+	earth->GenerateTexture(L"Textures/earth_night.dds", appGFX->GetDevice());
+
+	ship = new SceneObject(appGFX);
+	ship->LoadModelMesh("Models/ShipFighterModel.obj", appGFX->GetDevice());
+	ship->SetPosition(XMFLOAT3(15.0f, 0.0f, 0.0f));
+	ship->SetScale(XMFLOAT3(0.4f, 0.4f, 0.4f));
+	ship->GenerateTexture(L"Textures/shipTex.dss", appGFX->GetDevice());
+
+
+	//Initialise the view matrix for the camera
 	camera1->UpdateViewMatrix();
+	appGFX->SetEyePosW(camera1->GetCameraPosition());
 
-	//appGFX->CompileAndSetPixelShader("SkyBoxShader.fx");
 	
-	//appGFX->SetPixelShader(appGFX->GetSkyboxPixelShader());
+	//Create the object and initialise the variables for the skybox(skysphere)
 	skyMap = new SceneObject(appGFX);
-
 	skyMap->LoadModelMesh("Models/sphere.obj", appGFX->GetDevice());
 	skyMap->SetPosition(XMFLOAT3(0.0f, 0.0f, 5.5f));
 	skyMap->SetScale(XMFLOAT3(100.0f, 100.0f, 100.0f));
 	skyMap->SetRotation(XMFLOAT3(0.0f, 0.0f, 0.0f));
-	skyMap->GenerateTexture(L"Textures/sky.dds", appGFX->GetDevice());
-	
+	skyMap->GenerateTexture(L"Textures/stars_map.dds", appGFX->GetDevice());
 
+	plane = new GroundPlane(appGFX);
+	plane->GeneratePlane(30.0f, 30.0f, 8, 8);
+	plane->SetPosition (XMFLOAT3(0.0f, -10.0f, 0.0f));
+	plane->GenerateTexture(L"Textures/planeSurface.dds", appGFX->GetDevice());
+
+	
+	//Initialise the timer in the program
 	timer = new TimeKeep();
 	timer->Reset();
 	timer->Start();
 
+	//Set rotation values
 	rotation = 0.0f;
 	rotationSpeed = 2.0f;
+	earthRotationSpeed = 0.1f;
 	return S_OK;
 }
 
-//ID3D11Device* Application::GetDevice()
-//{
-//	return _pd3dDevice;
-//}
+
+
 
 
 XMFLOAT3 Application::CalculateNormals(XMFLOAT3 vertex1, XMFLOAT3 vertex2, XMFLOAT3 vertex3)
@@ -127,6 +150,7 @@ HRESULT Application::InitVertexBuffer()
 {
 	//GenerateGridPlain(3.0f, 3.0f, 6, 4);
 
+	//Hard coded vertex buffer for a cube - NOT IMPLEMENTED INTO CODE HERE TO DEMONSTRATE UNDERSTANDING AND ABILITY
 	HRESULT hrCube;
 	SimpleVertex verticesCube[] = {
 	
@@ -170,6 +194,7 @@ HRESULT Application::InitVertexBuffer()
 
 	};
 
+	//Create the buffer for the cube
 	D3D11_BUFFER_DESC bdCube;
 	ZeroMemory(&bdCube, sizeof(bdCube));
 	bdCube.Usage = D3D11_USAGE_DEFAULT;
@@ -222,88 +247,10 @@ HRESULT Application::InitVertexBuffer()
 	return S_OK;
 }
 
-void Application::GenerateGridPlain(float width, float depth, UINT m, UINT n) {
-	// std::vector<D3D11_BUFFER_DESC> meshData;
-
-	UINT vertexCount = m * n;
-	UINT faceCount = (m - 1) * (n - 1);
-
-	//Create Vertices
-	float halfWidth = 0.5f * width;
-	float halfDepth = 0.5f * depth;
-
-	float dx = width / (n - 1);
-	float dz = depth / (m - 1);
-
-	float du = 1.0f / (n - 1);
-	float dv = 1.0f / (m - 1);
-
-	std::vector<SimpleVertex> gridVertices;
-	gridVertices.resize(vertexCount);
-
-	for (UINT i = 0; i < m; i++)
-	{
-		float z = halfDepth - i * dz;
-		for (UINT j = 0; j < n; j++)
-		{
-			float x = -halfWidth + j * dx;
-			gridVertices[i * n + j].Pos = XMFLOAT3(x, 0.0f, z);
-
-		}
-	}
-	//Create vertex buffer for grid
-	D3D11_BUFFER_DESC bdGridV;
-	ZeroMemory(&bdGridV, sizeof(bdGridV));
-	bdGridV.Usage = D3D11_USAGE_DEFAULT;
-	bdGridV.ByteWidth = sizeof(vertexCount) * (gridVertices.size() * 2);
-	bdGridV.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bdGridV.CPUAccessFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA InitDataGridV;
-	ZeroMemory(&InitDataGridV, sizeof(InitDataGridV));
-	InitDataGridV.pSysMem = &gridVertices[0];
-
-	appGFX->GetDevice()->CreateBuffer(&bdGridV, &InitDataGridV, &_pVertexBufferGrid);
-
-	////////////////////////////////////////////////////////////////////////////////////////////////
-	//Generate Indices//
-	////////////////////////////////////////////////////////////////////////////////////////////////
-
-	std::vector<WORD> gridIndices;
-	gridIndices.resize(faceCount * 3);
-
-	//iterate over each quad and compute indices
-	UINT k = 0;
-	for (UINT i = 0; i < m - 1; i++)
-	{
-		for (UINT j = 0; j < n - 1; j++)
-		{
-			gridIndices[k] = i * n + j;
-			gridIndices[k + 1] = i * n + j + i;
-			gridIndices[k + 2] = (i + 1) * n + j;
-			gridIndices[k + 3] = (i + 1) * n + j;
-			gridIndices[k + 4] = i * n + j + 1;
-			gridIndices[k + 5] = (i + 1) * n + j + 1;
-		}
-	}
-
-	D3D11_BUFFER_DESC bdGridI;
-	ZeroMemory(&bdGridI, sizeof(bdGridI));
-
-	bdGridI.Usage = D3D11_USAGE_DEFAULT;
-	bdGridI.ByteWidth = sizeof(gridIndices) * gridIndices.size();
-	bdGridI.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	bdGridI.CPUAccessFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA InitDataGridI;
-	ZeroMemory(&InitDataGridI, sizeof(InitDataGridI));
-	InitDataGridI.pSysMem = &gridIndices[0];
-	appGFX->GetDevice()->CreateBuffer(&bdGridI, &InitDataGridI, &_pIndexBufferGrid);
-
-}
 
 HRESULT Application::InitIndexBuffer()
 {
+	//Hard coded index buffers - NOT IMPLEMENTED INTO SCENE HERE TO PROVIDE UNDERSTANDING OF CONCEPT
 	HRESULT hrCube;
 
 	// Create index buffer for Cube
@@ -363,11 +310,13 @@ HRESULT Application::InitIndexBuffer()
 
 void Application::Cleanup()
 {
-	
+	//Cleanup memory
 	if (_pVertexBufferCube) _pVertexBufferCube->Release();
 	if (_pIndexBufferCube) _pIndexBufferCube->Release();
 	if (_pVertexBufferCube) _pVertexBufferPyramid->Release();
 	if (_pIndexBufferCube) _pIndexBufferPyramid->Release();
+	if (p_TextureRV) p_TextureRV->Release();
+	if (p_SpecularTexture) p_SpecularTexture->Release();
 	
 	
 	
@@ -375,12 +324,14 @@ void Application::Cleanup()
 
 void Application::Update()
 {
+	appGFX->UpdateLighting();
 	// Update our time
-	//static float t = appGFX->TimerUpdate(t);
 	timer->Tick();
 	float deltaTime = timer->DeltaTime();
 	rotation += (rotationSpeed * deltaTime);
+	earthRotation += (earthRotationSpeed * deltaTime);
 
+	// HARD CODED SCENE OBJECT IMPLEMENTATION
 	////Scene object creation
 	//sceneObjects.resize(5);
 	//XMMATRIX sol = XMMatrixIdentity();
@@ -403,19 +354,22 @@ void Application::Update()
 	//plane = XMMatrixMultiply(plane, XMMatrixScaling(0.5, 0.5, 0.5) * XMMatrixTranslation(0, 0, 3));
 	//XMStoreFloat4x4(&gridPlane, plane);
 
-
-	//Enable/disable wireframe
+	appGFX->SetEyePosW(camera1->GetCameraPosition());
+	//Update scene objects
 	cube->Update();
+	earth->Update();
+	earth->SetRotation (XMFLOAT3(0.0f, earthRotation, 0.0f ));
+	ship->Update();
 	skyMap->SetPosition(camera1->GetCameraPosition()); 
 	
 	skyMap->Update();
-	//skyMap->Update();
+	plane->Update();
 
 	cube->SetRotation(XMFLOAT3(rotation, 0.3f, 0.3f));
-	appGFX->UpdateWireFrame();
+	isWireFrame = appGFX->UpdateWireFrame();
 
 	//Switch between pyramids and cubes
-	if (GetAsyncKeyState(VK_F3) && cubeView == false)
+	/*if (GetAsyncKeyState(VK_F3) && cubeView == false)
 	{
 		UINT stride = sizeof(SimpleVertex);
 		UINT offset = 0;
@@ -435,13 +389,13 @@ void Application::Update()
 
 		pyramidView = true;
 		cubeView = false;
-	}
+	}*/
 
 	//UpdateCameraControlls
 	// CameraControlls
 	
 
-
+	//Update camera controll input polling
 	UpdateCameraControlls(deltaTime);
 	
 }
@@ -458,7 +412,31 @@ void Application::UpdateCameraControlls(float deltaTime)
 	if (GetAsyncKeyState('A')) camera1->Strafe(-10.0f * deltaTime);
 	else if (GetAsyncKeyState('D')) camera1->Strafe(10.0f * deltaTime);
 	
+	//Q-E
+	if (GetAsyncKeyState('Q')) camera1->RotateY(-5.0f * deltaTime);
+	else if (GetAsyncKeyState('E')) camera1->RotateY(5.0f * deltaTime);
 	
+	//R-F
+	if (GetAsyncKeyState('R')) camera1->Pitch(-5.0f * deltaTime);
+	else if (GetAsyncKeyState('F')) camera1->Pitch(5.0f * deltaTime);
+
+	// ================= Mouse Movement ================= //
+	POINT current_mouse_pos = {};
+	::GetCursorPos(&current_mouse_pos);
+
+	if (isFirstMouseMove)
+	{
+		isFirstMouseMove = false;
+		m_old_mouse_position = CursorPoint(current_mouse_pos.x, current_mouse_pos.y);
+	}
+
+	if (current_mouse_pos.x!=m_old_mouse_position.m_x || current_mouse_pos.y != m_old_mouse_position.m_y  )
+	{
+		//MOUSE MOVEMENT OCCURRED
+		OnMouseMove(CursorPoint(current_mouse_pos.x = m_old_mouse_position.m_x, current_mouse_pos.y - m_old_mouse_position.m_y));
+	}
+	m_old_mouse_position = CursorPoint(current_mouse_pos.x, current_mouse_pos.y);
+
 	//if (GetAsyncKeyState(VK_UP) && camera1->momentum > 10)
 	//{
 	//	camera1->momentum += 0.5f * deltaTime;
@@ -472,21 +450,46 @@ void Application::UpdateCameraControlls(float deltaTime)
 	camera1->UpdateViewMatrix();
 }
 
+void Application::OnMouseMove(const CursorPoint& delta_mouse_pos)
+{
+
+}
+
 void Application::Draw()
 {
+	//Change the rasterizer state to render textures on the outside of the objects
+	
+	
 	appGFX->SetSkyboxRasterizerState(false);
+	
+	
 	appGFX->ClearBackBuffer();
+	//Draw objects
+	appGFX->SetPixelShader(appGFX->GetScenePixelShader());
+
+	appGFX->SetWireFrame(isWireFrame);
+
 	cube->Draw();
+	earth->Draw();
+	ship->Draw();
+	plane->Draw(plane->GetPlaneVb(), plane->GetPlaneIb(), plane->GetPlaneIndexCount());
+
+
+	//Set the rasterizer state to draw the textures on the inside of the model for the skybox
 
 	appGFX->SetSkyboxRasterizerState(true);
+	
+	
+
 	appGFX->SetPixelShader(appGFX->GetSkyboxPixelShader());
+
 	skyMap->Draw();
 
 	//skyMap->Draw();
 
 	appGFX->Present();
 
-	//RE IMPLEMENT HARD CODED SHAPES ///////////////////////////////////////////////////////////////////////
+	//HARD CODED RENDERING ///////////////////////////////////////////////////////////////////////
 	/*XMFLOAT4X4 world = appGFX->GetWorld();
 	Render all planets
 	if (cubeView == true)

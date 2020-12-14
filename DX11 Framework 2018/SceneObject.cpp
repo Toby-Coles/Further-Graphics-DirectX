@@ -121,7 +121,7 @@ XMFLOAT3 SceneObject::GetScale()
 
 void SceneObject::Draw()
 {
-
+	
 	appGFX->SetIndexBuffer(mMeshData.IndexBuffer);
 	appGFX->SetVertexBuffer(mMeshData.VertexBuffer);
 
@@ -136,6 +136,13 @@ void SceneObject::Draw()
 	
 	appGFX->UpdateConstantBufferVariables(mTransform);
 	appGFX->Draw(mMeshData.IndexCount);
+}
+void SceneObject::Draw(ID3D11Buffer* vertexBuffer, ID3D11Buffer* indexBuffer,UINT indexCount){
+	appGFX->SetIndexBuffer(indexBuffer);
+	appGFX->SetVertexBuffer(vertexBuffer);
+	appGFX->UpdateConstantBufferVariables(mTransform);
+
+	appGFX->Draw(indexCount);
 }
 
 void SceneObject::Update()

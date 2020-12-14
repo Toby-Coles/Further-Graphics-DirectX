@@ -16,6 +16,8 @@
 #include "Camera.h"
 
 #include "CubeObject.h"
+#include "CursorPoint.h"
+#include "GroundPlane.h"
 
 
 using namespace DirectX;
@@ -29,8 +31,7 @@ private:
 	ID3D11Buffer*           _pIndexBufferCube;
 	ID3D11Buffer*			_pVertexBufferPyramid;
 	ID3D11Buffer*			_pIndexBufferPyramid;
-	ID3D11Buffer*			_pVertexBufferGrid;
-	ID3D11Buffer*			_pIndexBufferGrid;
+	
 
 
 	SimpleVertex simpleVertex;
@@ -55,12 +56,16 @@ private:
 	std::vector<XMFLOAT4X4> asteroidBelt;
 	XMFLOAT4X4 gridPlane;
 
+	GroundPlane* plane;
 	SceneObject* cube;
+	SceneObject* earth;
+	SceneObject* ship;
+
 	Camera* camera1;
 
 private:
 	
-
+	bool isWireFrame = false;
 	void Cleanup();
 	
 
@@ -72,6 +77,9 @@ private:
 	std::vector<SceneObject> applicationObjects;
 
 	float rotationSpeed;
+	float earthRotationSpeed;
+
+	float earthRotation = 0.0f;
 	float rotation = 0.0f;
 
 public:
@@ -79,8 +87,11 @@ public:
 	~Application();
 
 	HRESULT Initialise(HINSTANCE hInstance, int nCmdShow);
-	
-	
+	void OnMouseMove(const CursorPoint& delta_mouse_pos);
+
+	//Mouse control attributes
+	CursorPoint m_old_mouse_position;
+	bool isFirstMouseMove = true;
 
 	void Update();
 	void Draw();

@@ -106,17 +106,17 @@ XMFLOAT4X4 SceneObject::GetTransform()
 
 XMFLOAT3 SceneObject::GetPosition()
 {
-	return XMFLOAT3();
+	return mPosition;
 }
 
 XMFLOAT3 SceneObject::GetRotation()
 {
-	return XMFLOAT3();
+	return mRotation;
 }
 
 XMFLOAT3 SceneObject::GetScale()
 {
-	return XMFLOAT3();
+	return mScale;
 }
 
 void SceneObject::Draw()

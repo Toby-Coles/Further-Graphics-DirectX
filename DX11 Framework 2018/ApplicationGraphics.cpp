@@ -1,4 +1,6 @@
 #include "ApplicationGraphics.h"
+#include "Imgui\imgui.h"
+#include "Imgui\imgui_impl_win32.h"
 
 
 ApplicationGraphics::ApplicationGraphics()
@@ -72,7 +74,30 @@ HRESULT ApplicationGraphics::Initialize(HINSTANCE hInstance, int nCmdShow)
 	specularPower = 10.0f;
 
 	
-	
+	//Point Light
+
+	_pointLight.Ambient = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
+	_pointLight.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	_pointLight.Specular = XMFLOAT4(0.4f, 0.4f, 0.4f, 1.0f);
+	_pointLight.Attenuation = XMFLOAT3(0.0f, 0.03f, 0.0f);
+	_pointLight.Position = XMFLOAT3(0.0f, 0.0f, 45.0f);
+
+	_pointLight.Range = 6000.0f;
+
+
+
+	//SpotLight
+	_spotLight.Ambient = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
+	_spotLight.Diffuse = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	_spotLight.Specular = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
+	_spotLight.Attenuation = XMFLOAT3(1.0f, 0.0f, 0.0f);
+	_spotLight.Spot = 96.0f;
+	_spotLight.Range = 15.0f;
+
+	//local Material values
+	_material.Ambient = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
+	_material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	_material.Specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 
 
 
@@ -80,21 +105,7 @@ HRESULT ApplicationGraphics::Initialize(HINSTANCE hInstance, int nCmdShow)
 }
 
 void ApplicationGraphics::UpdateLighting() {
-	//Point Light
-	_pointLight.Ambient = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
-	_pointLight.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	_pointLight.Specular = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
-	_pointLight.Attenuation = XMFLOAT3(0.0f, 0.1f, 0.0f);
-	_pointLight.Position = XMFLOAT3(0.0f, 0.0f, 10.0f);
-	_pointLight.Range = 30.0f;
-
-	//SpotLight
-	_spotLight.Ambient = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
-	_spotLight.Diffuse = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	_spotLight.Specular = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
-	_spotLight.Attenuation = XMFLOAT3(1.0f, 0.0f, 0.0f);
-	_spotLight.Spot = 96.0f;
-	_spotLight.Range = 15.0f;
+	
 
 	_spotLight.Position = _activeCamera->GetCameraPosition();
 
@@ -107,11 +118,52 @@ void ApplicationGraphics::UpdateLighting() {
 
 }
 
+void ApplicationGraphics::RunLightingControls()
+{
+	//Creation of the Lighting control pannel, enabling the user to change graphics settings on the fly
+	ImGui::Begin("Lighting Control Panel");
+	ImGui::Text("Point Light (sunlight)");
+	ImGui::SliderFloat("Position X", &_pointLight.Position.x, -50.0f, 50.0f);
+	ImGui::SliderFloat("Position Y", &_pointLight.Position.y, -50.0f, 50.0f);
+	ImGui::SliderFloat("Position Z", &_pointLight.Position.z, -50.0f, 50.0f);
+	ImGui::SliderFloat("Ambient X", &_pointLight.Ambient.x, 0.0f, 1.0f);
+	ImGui::SliderFloat("Ambient Y", &_pointLight.Ambient.y, 0.0f, 1.0f);
+	ImGui::SliderFloat("Ambient Z", &_pointLight.Ambient.z, 0.0f, 1.0f);
+	ImGui::Spacing;
+	ImGui::SliderFloat("Diffuse X", &_pointLight.Diffuse.x, 0.0f, 1.0f);
+
+	ImGui::SliderFloat("Diffuse Y", &_pointLight.Diffuse.y, 0.0f, 1.0f);
+	ImGui::SliderFloat("Diffuse Z", &_pointLight.Diffuse.z, 0.0f, 1.0f);
+	ImGui::Separator;
+	ImGui::SliderFloat("Specular X", &_pointLight.Specular.x, 0.0f, 1.0f);
+	ImGui::SliderFloat("Specular Y", &_pointLight.Specular.y, 0.0f, 1.0f);
+	ImGui::SliderFloat("Specular Z", &_pointLight.Specular.z, 0.0f, 1.0f);
+
+	ImGui::End();
+
+	
+
+	ImGui::Begin("Material Value Control Panel");
+	ImGui::Text("Material Values");
+	ImGui::SliderFloat("Ambient X", &_material.Ambient.x, 0.0f, 1.0f);
+	ImGui::SliderFloat("Ambient Y", &_material.Ambient.y, 0.0f, 1.0f);
+	ImGui::SliderFloat("Ambient Z", &_material.Ambient.z, 0.0f, 1.0f);
+	ImGui::SliderFloat("Diffuse X", &_material.Diffuse.x, 0.0f, 1.0f);
+	ImGui::SliderFloat("Diffuse Y", &_material.Diffuse.y, 0.0f, 1.0f);
+	ImGui::SliderFloat("Diffuse Z", &_material.Diffuse.z, 0.0f, 1.0f);
+	ImGui::SliderFloat("Specular X", &_material.Specular.x, 0.0f, 1.0f);
+	ImGui::SliderFloat("Specular Y", &_material.Specular.y, 0.0f, 1.0f);
+	ImGui::SliderFloat("Specular Z", &_material.Specular.z, 0.0f, 1.0f);
+	ImGui::End();
+}
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	PAINTSTRUCT ps;
 	HDC hdc;
-
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+		return true;
 	switch (message)
 	{
 	case WM_PAINT:
@@ -168,9 +220,9 @@ void ApplicationGraphics::UpdateConstantBufferVariables(XMFLOAT4X4& position)
 	cb.EyePosW = _activeCamera->GetCameraPosition();
 	cb.PointLight.Position = _activeCamera->GetCameraPosition();
 
-	cb.material.Ambient = XMFLOAT4(0.4f, 0.4f, 0.4f, 1.0f);
-	cb.material.Diffuse = XMFLOAT4(0.9f, 0.9f, 0.9f, 1.0f);
-	cb.material.Specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	cb.material.Ambient = _material.Ambient;
+	cb.material.Diffuse = _material.Diffuse;
+	cb.material.Specular = _material.Specular;
 
 
 	cb.PointLight = _pointLight;
@@ -304,11 +356,22 @@ void ApplicationGraphics::SetCamera(Camera* camera)
 	_activeCamera = camera;
 }
 
+Camera* ApplicationGraphics::GetCurrentCamera() {
+
+	return _activeCamera;
+}
+
+
 
 
 XMFLOAT4X4 ApplicationGraphics::GetWorld()
 {
 	return _world;
+}
+
+HWND ApplicationGraphics::getWnd()
+{
+	return _hWnd;
 }
 
 ID3D11PixelShader* ApplicationGraphics::GetScenePixelShader()

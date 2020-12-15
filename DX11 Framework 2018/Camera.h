@@ -29,6 +29,7 @@ public:
 
 	//Set and return methods
 	void SetCameraPosition(XMFLOAT3 position);
+	void SetPosition(float x, float y, float z);
 	void Pitch(float angle);
 	void RotateY(float angle);
 

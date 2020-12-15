@@ -84,9 +84,15 @@ public:
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetContext();
 	void SetCamera(Camera* camera);
+
+	Camera* GetCurrentCamera();
+
+	void RunLightingControls();
 	
 	ConstantBuffer GetCB();
 	XMFLOAT4X4 GetWorld();
+	HWND getWnd();
+
 
 	ID3D11PixelShader* GetScenePixelShader();
 	ID3D11PixelShader* GetSkyboxPixelShader();
@@ -155,7 +161,7 @@ private:
 	float specularPower;
 	XMFLOAT3 EyePosW;
 
-	
+	Material _material;
 
 	bool wireFrame;
 	float keyPressTimer;

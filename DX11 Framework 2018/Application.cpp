@@ -30,10 +30,13 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	//Initialise graphics object, used for referencing its functionability to be used in the application
 	appGFX = new ApplicationGraphics();
 	appGFX->Initialize(hInstance, nCmdShow);
+
+	ui = UserInterface(appGFX);
 	
 	//Create and set variables for the camera object and set the current active camera in the program
 	camera1 = new Camera();
-	appGFX->SetCamera(camera1);     
+	   
+
 	camera1->SetCameraPosition(XMFLOAT3(0.0f, 0.0f, 15.5f));
 	camera1->LookAt(camera1->GetCameraPosition(), XMFLOAT3(0.0f, 0.0f, 1.0f), camera1->GetCameraUp());
 	camera1->SetLens(90.0f, 1920 /1080, 0.01f, 1000.0f);
@@ -59,11 +62,23 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	earth->GenerateTexture(L"Textures/earth_night.dds", appGFX->GetDevice());
 
 	ship = new SceneObject(appGFX);
-	ship->LoadModelMesh("Models/ShipFighterModel.obj", appGFX->GetDevice());
-	ship->SetPosition(XMFLOAT3(15.0f, 0.0f, 0.0f));
-	ship->SetScale(XMFLOAT3(0.4f, 0.4f, 0.4f));
+	ship->LoadModelMesh("Models/userModel.obj", appGFX->GetDevice());
+	ship->SetPosition(XMFLOAT3(0.0f, 0.0f, - 25.0f));
+	ship->SetScale(XMFLOAT3(0.3f, 0.3f, 0.3f));
 	ship->GenerateTexture(L"Textures/shipTex.dss", appGFX->GetDevice());
 
+	shipPlayer = new SceneObject(appGFX);
+	shipPlayer->LoadModelMesh("Models/userModelRotated.obj", appGFX->GetDevice());
+	shipPlayer->SetPosition(XMFLOAT3(0.0f, 0.0f, 40.0f));
+	shipPlayer->SetScale(XMFLOAT3(0.3f, 0.3f, 0.3f));
+	shipPlayer->GenerateTexture(L"Textures/shipTex.dss", appGFX->GetDevice());
+	
+
+	camera2 = new Camera();
+	camera2->SetCameraPosition(XMFLOAT3(0.0f, 0.0f, 15.0f));
+	camera2->LookAt(camera2->GetCameraPosition(), XMFLOAT3(0.0f, 0.0f, 1.0f), camera2->GetCameraUp());
+	camera2->SetLens(90.0f, 1920 / 1080, 0.01f, 1000.0f);
+	camera2->UpdateViewMatrix();
 
 	//Initialise the view matrix for the camera
 	camera1->UpdateViewMatrix();
@@ -89,10 +104,14 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	timer->Reset();
 	timer->Start();
 
+	moveSpeed = 3.0f;
+	
+
 	//Set rotation values
 	rotation = 0.0f;
-	rotationSpeed = 2.0f;
+	rotationSpeed = 0.5f;
 	earthRotationSpeed = 0.1f;
+	appGFX->SetCamera(camera1);
 	return S_OK;
 }
 
@@ -354,13 +373,29 @@ void Application::Update()
 	//plane = XMMatrixMultiply(plane, XMMatrixScaling(0.5, 0.5, 0.5) * XMMatrixTranslation(0, 0, 3));
 	//XMStoreFloat4x4(&gridPlane, plane);
 
-	appGFX->SetEyePosW(camera1->GetCameraPosition());
+	
+	appGFX->SetEyePosW(appGFX->GetCurrentCamera()->GetCameraPosition());
+
 	//Update scene objects
 	cube->Update();
 	earth->Update();
 	earth->SetRotation (XMFLOAT3(0.0f, earthRotation, 0.0f ));
+	shipPlayer->Update();
+
+	camera2->SetPosition(
+		shipPlayer->GetPosition().x + offset.x,
+		shipPlayer->GetPosition().y + offset.y,
+		shipPlayer->GetPosition().z + offset.z );
+	
+
+
+	
+	ship->SetRotation(XMFLOAT3(0.0f, rotation, 0.0f));
+	
 	ship->Update();
-	skyMap->SetPosition(camera1->GetCameraPosition()); 
+	
+	
+	skyMap->SetPosition(appGFX->GetCurrentCamera()->GetCameraPosition()); 
 	
 	skyMap->Update();
 	plane->Update();
@@ -390,16 +425,55 @@ void Application::Update()
 		pyramidView = true;
 		cubeView = false;
 	}*/
-
-	//UpdateCameraControlls
-	// CameraControlls
 	
 
+
+	camera2->UpdateViewMatrix();
 	//Update camera controll input polling
+	
 	UpdateCameraControlls(deltaTime);
+
+	UpdateShipControlls(deltaTime);
 	
 }
 
+void Application::UpdateShipControlls(float deltaTime) {
+	XMFLOAT3 shipPosition = shipPlayer->GetPosition();
+	XMFLOAT3 shipRotation = shipPlayer->GetRotation();
+
+	if (GetAsyncKeyState('I'))
+	{
+		shipPosition.z += -moveSpeed * deltaTime;
+	}
+	else if (GetAsyncKeyState('K'))
+	{
+		shipPosition.z += moveSpeed * deltaTime;
+	}
+	if (GetAsyncKeyState('J'))
+	{
+		shipPosition.x += moveSpeed * deltaTime;
+	}
+	else if (GetAsyncKeyState('L'))
+	{
+		shipPosition.x += -moveSpeed * deltaTime;
+	}
+	if (GetAsyncKeyState('O'))
+	{
+		shipRotation.y += moveSpeed * deltaTime;
+	}
+
+	//Position update
+	if (shipPosition.x != shipPlayer->GetPosition().x
+		|| shipPosition.z != shipPlayer->GetPosition().z) 
+		shipPlayer->SetPosition(shipPosition);
+
+	//Rotation Update
+	if (shipRotation.x != shipPlayer->GetRotation().x
+		|| shipRotation.y != shipPlayer->GetRotation().y ||
+		shipRotation.z != shipPlayer->GetRotation().z)
+		shipPlayer->SetRotation(shipRotation);
+
+}
 void Application::UpdateCameraControlls(float deltaTime)
 {
 	//Camera controlls for W, A, S and D
@@ -420,6 +494,14 @@ void Application::UpdateCameraControlls(float deltaTime)
 	if (GetAsyncKeyState('R')) camera1->Pitch(-5.0f * deltaTime);
 	else if (GetAsyncKeyState('F')) camera1->Pitch(5.0f * deltaTime);
 
+	// ================= Camera Selection ================= //
+
+	if (GetAsyncKeyState('1')) appGFX->SetCamera(camera1);
+	appGFX->SetEyePosW(camera1->GetCameraPosition());
+
+	if (GetAsyncKeyState('2')) appGFX->SetCamera(camera2);
+	appGFX->SetEyePosW(camera2->GetCameraPosition());
+
 	// ================= Mouse Movement ================= //
 	POINT current_mouse_pos = {};
 	::GetCursorPos(&current_mouse_pos);
@@ -436,6 +518,8 @@ void Application::UpdateCameraControlls(float deltaTime)
 		OnMouseMove(CursorPoint(current_mouse_pos.x = m_old_mouse_position.m_x, current_mouse_pos.y - m_old_mouse_position.m_y));
 	}
 	m_old_mouse_position = CursorPoint(current_mouse_pos.x, current_mouse_pos.y);
+
+
 
 	//if (GetAsyncKeyState(VK_UP) && camera1->momentum > 10)
 	//{
@@ -455,14 +539,46 @@ void Application::OnMouseMove(const CursorPoint& delta_mouse_pos)
 
 }
 
+void Application::ShowSceneUI()
+{
+	XMFLOAT3 earthScale = XMFLOAT3(earth->GetScale());
+	XMFLOAT3 earthPosition = XMFLOAT3(earth->GetPosition());
+	XMFLOAT3 shipOrbiterScale = XMFLOAT3(ship->GetScale());
+	XMFLOAT3 shipPosition = XMFLOAT3(ship->GetPosition());
+
+	ImGui::Begin("Scene Object Control Panel");
+	ImGui::Text("Earth");
+	ImGui::SliderFloat("Earth Scale X", &earthScale.x, 0.0f, 50.0f);
+	ImGui::SliderFloat("Earth Scale Y", &earthScale.y, 0.0f, 50.0f);
+	ImGui::SliderFloat("Earth Scale Z", &earthScale.z, 0.0f, 50.0f);
+	ImGui::SliderFloat("Earth Rotation", &earthRotationSpeed, 0.0f, 2.0f);
+	ImGui::SliderFloat("Position X", &earthPosition.x, -50.0f, 50.0f);
+	ImGui::SliderFloat("Position Y", &earthPosition.y, -50.0f, 50.0f);
+	ImGui::SliderFloat("Position Z", &earthPosition.z, -50.0f, 50.0f);
+	ImGui::Text("SpaceShip(Orbiter)");
+	ImGui::SliderFloat("Ship Scale X", &shipOrbiterScale.x, 0.0f, 50.0f);
+	ImGui::SliderFloat("Ship Scale Y", &shipOrbiterScale.y, 0.0f, 50.0f);
+	ImGui::SliderFloat("Ship Scale Z", &shipOrbiterScale.z, 0.0f, 50.0f);
+	ImGui::SliderFloat("Ship Rotation", &rotationSpeed, 0.0f, 2.0f);
+	ImGui::SliderFloat("Ship Position X", &shipPosition.x, -50.0f, 50.0f);
+	ImGui::SliderFloat("Ship Position Y", &shipPosition.y, -50.0f, 50.0f);
+	ImGui::SliderFloat("ship Position Z", &shipPosition.z, -50.0f, 50.0f);
+
+	ImGui::End();
+	earth->SetScale(earthScale);
+	earth->SetPosition(earthPosition);
+	ship->SetScale(shipOrbiterScale);
+	ship->SetPosition(shipPosition);
+}
+
 void Application::Draw()
 {
 	//Change the rasterizer state to render textures on the outside of the objects
-	
+	ui.FrameBegin();
 	
 	appGFX->SetSkyboxRasterizerState(false);
 	
-	
+	ShowSceneUI();
 	appGFX->ClearBackBuffer();
 	//Draw objects
 	appGFX->SetPixelShader(appGFX->GetScenePixelShader());
@@ -472,8 +588,9 @@ void Application::Draw()
 	cube->Draw();
 	earth->Draw();
 	ship->Draw();
+	shipPlayer->Draw();
 	plane->Draw(plane->GetPlaneVb(), plane->GetPlaneIb(), plane->GetPlaneIndexCount());
-
+	appGFX->RunLightingControls();
 
 	//Set the rasterizer state to draw the textures on the inside of the model for the skybox
 
@@ -486,6 +603,7 @@ void Application::Draw()
 	skyMap->Draw();
 
 	//skyMap->Draw();
+	ui.FrameEnd();
 
 	appGFX->Present();
 

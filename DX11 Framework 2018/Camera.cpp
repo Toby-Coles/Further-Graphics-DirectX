@@ -102,6 +102,11 @@ void Camera::SetCameraPosition(XMFLOAT3 position)
 	_position = position;
 
 }
+void Camera::SetPosition(float x, float y, float z) {
+	_position.x = x;
+	_position.y = y;
+	_position.z = z;
+}
 
 
 void Camera::SetCameraLookAtPoint(XMFLOAT3 lookAt)

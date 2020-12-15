@@ -76,11 +76,13 @@ VS_OUTPUT VS(float4 Pos : POSITION, float3 NormalL : NORMAL, float2 Tex : TEXCOO
 {
     
     VS_OUTPUT output = (VS_OUTPUT)0;
+
     output.Norm = normalize(NormalL);
 
     output.Pos = mul( Pos, World );
-    output.PosW = normalize(EyePosW - output.Pos.xyz);
-
+ 
+    output.PosW = output.Pos;
+    
     output.Pos = mul( output.Pos, View );
     output.Pos = mul( output.Pos, Projection );
     output.Tex = Tex;
@@ -188,7 +190,16 @@ float4 PS(VS_OUTPUT input) : SV_Target
     //endColour.rgb = amb + dif + (specularColour * spec) + textureColour;
     //endColour.rgb = ((textureColour * (diffuse + ambient)) + specular);
     //endColour.rgb =  ((ambient + diffuse) + (specular)) + textureColour;
-    endColour.rgb = dayNightProcess * (amb + dif) + (specularColour * spec);
+    float3 textureApply;
+    if (earthNight.x > 0)
+    {
+        textureApply = dayNightProcess;
+    }
+    else
+    {
+        textureApply = textureColour;
+    }
+    endColour.rgb = textureApply * (amb + dif) + (specularColour * spec);
     endColour.a = material.Diffuse.a;
 
     return endColour;

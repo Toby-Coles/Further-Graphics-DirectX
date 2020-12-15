@@ -18,7 +18,7 @@
 #include "CubeObject.h"
 #include "CursorPoint.h"
 #include "GroundPlane.h"
-
+#include "SetUpGUI.h"
 
 using namespace DirectX;
 
@@ -46,6 +46,7 @@ private:
 
 	void GenerateGridPlain(float width, float depth, UINT m, UINT n);
 	XMFLOAT3 CalculateNormals(XMFLOAT3 vertex1, XMFLOAT3 vertex2, XMFLOAT3 vertex3);
+	void UpdateShipControlls(float deltaTime);
 	void UpdateCameraControlls(float deltaTime);
 	
 	ApplicationGraphics* appGFX;
@@ -60,9 +61,13 @@ private:
 	SceneObject* cube;
 	SceneObject* earth;
 	SceneObject* ship;
+	SceneObject* shipPlayer;
+
+	UserInterface ui;
 
 	Camera* camera1;
-
+	Camera* camera2;
+	Camera* camera3;
 private:
 	
 	bool isWireFrame = false;
@@ -81,6 +86,9 @@ private:
 
 	float earthRotation = 0.0f;
 	float rotation = 0.0f;
+	XMFLOAT3 offset = XMFLOAT3(0.0f, 3.0f, 5.0f);
+
+	float moveSpeed;
 
 public:
 	Application();
@@ -88,6 +96,7 @@ public:
 
 	HRESULT Initialise(HINSTANCE hInstance, int nCmdShow);
 	void OnMouseMove(const CursorPoint& delta_mouse_pos);
+	void ShowSceneUI();
 
 	//Mouse control attributes
 	CursorPoint m_old_mouse_position;

@@ -27,7 +27,7 @@ struct PointLight : Light
 };
 struct SpotLight : Light
 {
-	SpotLight() { ZeroMemory(this, sizeof(this)); }
+	//SpotLight() { ZeroMemory(this, sizeof(this)); }
 
 	XMFLOAT3 Position;
 	float Range;

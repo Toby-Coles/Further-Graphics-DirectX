@@ -12,11 +12,8 @@
 #include "SceneObject.h"
 #include "ApplicationGraphics.h"
 #include "Time.h"
-
 #include "Camera.h"
-
 #include "CubeObject.h"
-#include "CursorPoint.h"
 #include "GroundPlane.h"
 #include "SetUpGUI.h"
 
@@ -32,31 +29,27 @@ private:
 	ID3D11Buffer*			_pVertexBufferPyramid;
 	ID3D11Buffer*			_pIndexBufferPyramid;
 	
-
-
 	SimpleVertex simpleVertex;
 
 	//Texturing
 	ID3D11ShaderResourceView* p_TextureRV = nullptr;
 	ID3D11ShaderResourceView* p_SpecularTexture = nullptr;
 
-	
-	bool cubeView;
-	bool pyramidView;
-
-	void GenerateGridPlain(float width, float depth, UINT m, UINT n);
-	XMFLOAT3 CalculateNormals(XMFLOAT3 vertex1, XMFLOAT3 vertex2, XMFLOAT3 vertex3);
+	//Update Controls
 	void UpdateShipControlls(float deltaTime);
 	void UpdateCameraControlls(float deltaTime);
 	
 	ApplicationGraphics* appGFX;
 	SceneObject* skyMap;
 
-	//Scene Objects
-	std::vector<XMFLOAT4X4> sceneObjects;
-	std::vector<XMFLOAT4X4> asteroidBelt;
+	//Scene Objects (old, for hard coded values)
+	//std::vector<XMFLOAT4X4> sceneObjects;
+
 	XMFLOAT4X4 gridPlane;
 
+	std::vector<SceneObject*> worldSceneObjects;
+
+	//Scene Objects
 	GroundPlane* plane;
 	SceneObject* cube;
 	SceneObject* earth;
@@ -72,7 +65,7 @@ private:
 	
 	bool isWireFrame = false;
 	void Cleanup();
-	
+	bool showGridPlane;
 
 	HRESULT InitVertexBuffer();
 	HRESULT InitIndexBuffer();
@@ -95,12 +88,10 @@ public:
 	~Application();
 
 	HRESULT Initialise(HINSTANCE hInstance, int nCmdShow);
-	void OnMouseMove(const CursorPoint& delta_mouse_pos);
+
 	void ShowSceneUI();
 
-	//Mouse control attributes
-	CursorPoint m_old_mouse_position;
-	bool isFirstMouseMove = true;
+	
 
 	void Update();
 	void Draw();

@@ -50,8 +50,6 @@ HRESULT ApplicationGraphics::Initialize(HINSTANCE hInstance, int nCmdShow)
 	// Initialize the world matrix
 	XMStoreFloat4x4(&_world, XMMatrixIdentity());
 	SkyboxRasterizerState();
-		
-	//EyePosW = XMFLOAT3(0.0f, 0.0f, 4.5);
 
 	//Initialise Lighting
 
@@ -72,8 +70,6 @@ HRESULT ApplicationGraphics::Initialize(HINSTANCE hInstance, int nCmdShow)
 	specularLight = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	specularMaterial = XMFLOAT4(0.4f, 0.4f, 0.4f, 1.0f);
 	specularPower = 10.0f;
-
-	
 	//Point Light
 
 	_pointLight.Ambient = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
@@ -92,7 +88,7 @@ HRESULT ApplicationGraphics::Initialize(HINSTANCE hInstance, int nCmdShow)
 	_spotLight.Specular = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
 	_spotLight.Attenuation = XMFLOAT3(1.0f, 0.0f, 0.0f);
 	_spotLight.Spot = 96.0f;
-	_spotLight.Range = 15.0f;
+	_spotLight.Range = 20.0f;
 
 	//local Material values
 	_material.Ambient = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
@@ -106,10 +102,10 @@ HRESULT ApplicationGraphics::Initialize(HINSTANCE hInstance, int nCmdShow)
 
 void ApplicationGraphics::UpdateLighting() {
 	
-
+	//Keeps the spotlights position and direction reletive to the active camera
 	_spotLight.Position = _activeCamera->GetCameraPosition();
 
-	//_spotLight.Direction = _activeCamera->GetCameraLookAtPoint();
+	_spotLight.Direction = _activeCamera->GetCameraLookAtPoint();
 
 	XMStoreFloat3(&_spotLight.Direction, XMVector3Normalize(_activeCamera->GetLookAtVec() - _activeCamera->GetCameraVecPosition()));
 
@@ -156,6 +152,8 @@ void ApplicationGraphics::RunLightingControls()
 	ImGui::SliderFloat("Specular Z", &_material.Specular.z, 0.0f, 1.0f);
 	ImGui::End();
 }
+
+//External handler to make the user interface work with mouse inputs
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -198,6 +196,7 @@ void ApplicationGraphics::SetIndexBuffer(ID3D11Buffer* buffer)
 
 void ApplicationGraphics::UpdateConstantBufferVariables(XMFLOAT4X4& position)
 {
+	//Sets constant buffer variables for object rendering
 	ConstantBuffer cb;
 	XMMATRIX world =XMLoadFloat4x4(&position);
 	XMMATRIX view = XMLoadFloat4x4(&_activeCamera->GetViewMatrix());
@@ -633,6 +632,7 @@ HRESULT ApplicationGraphics::CompileShaderFromFile(WCHAR* szFileName, LPCSTR szE
 	// the shaders to be optimized and to run exactly the way they will run in 
 	// the release configuration of this program.
 	dwShaderFlags |= D3DCOMPILE_DEBUG;
+	dwShaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 
 	ID3DBlob* pErrorBlob;

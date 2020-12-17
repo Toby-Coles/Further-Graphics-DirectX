@@ -199,6 +199,7 @@ float4 PS(VS_OUTPUT input) : SV_Target
     {
         textureApply = textureColour;
     }
+
     endColour.rgb = textureApply * (amb + dif) + (specularColour * spec);
     endColour.a = material.Diffuse.a;
 

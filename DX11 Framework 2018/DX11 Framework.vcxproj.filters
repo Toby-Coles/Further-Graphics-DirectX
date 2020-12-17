@@ -22,7 +22,6 @@
     <ClInclude Include="ApplicationGraphics.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Time.h" />
-    <ClInclude Include="CursorPoint.h" />
     <ClInclude Include="LightStructs.h" />
     <ClInclude Include="GroundPlane.h" />
     <ClInclude Include="Imgui\imconfig.h">

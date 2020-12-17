@@ -3,7 +3,7 @@
 void GroundPlane::GeneratePlane(float width, float depth, UINT m, UINT n)
 {
 	UINT vertexCount = m * n;
-	UINT faceCount = (m - 1) * (n - 1);
+	UINT faceCount = (m - 1) * (n - 1) * 2;
 
 	//Create Vertices
 	float halfWidth = 0.5f * width;
@@ -32,7 +32,7 @@ void GroundPlane::GeneratePlane(float width, float depth, UINT m, UINT n)
 	D3D11_BUFFER_DESC bdGridV;
 	ZeroMemory(&bdGridV, sizeof(bdGridV));
 	bdGridV.Usage = D3D11_USAGE_DEFAULT;
-	bdGridV.ByteWidth = sizeof(vertexCount) * (gridVertices.size() * 2);
+	bdGridV.ByteWidth = sizeof(SimpleVertex) * gridVertices.size();// *(gridVertices.size() * 2);
 	bdGridV.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bdGridV.CPUAccessFlags = 0;
 
@@ -56,11 +56,14 @@ void GroundPlane::GeneratePlane(float width, float depth, UINT m, UINT n)
 		for (UINT j = 0; j < n - 1; j++)
 		{
 			gridIndices[k] = i * n + j;
-			gridIndices[k + 1] = i * n + j + i;
+			gridIndices[k + 1] = i * n + j + 1;
 			gridIndices[k + 2] = (i + 1) * n + j;
+
 			gridIndices[k + 3] = (i + 1) * n + j;
 			gridIndices[k + 4] = i * n + j + 1;
 			gridIndices[k + 5] = (i + 1) * n + j + 1;
+
+			k += 6;
 		}
 	}
 
@@ -68,7 +71,7 @@ void GroundPlane::GeneratePlane(float width, float depth, UINT m, UINT n)
 	ZeroMemory(&bdGridI, sizeof(bdGridI));
 	indexCount = gridIndices.size();
 	bdGridI.Usage = D3D11_USAGE_DEFAULT;
-	bdGridI.ByteWidth = sizeof(gridIndices) * gridIndices.size();
+	bdGridI.ByteWidth = sizeof(WORD) * gridIndices.size();
 	bdGridI.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bdGridI.CPUAccessFlags = 0;
 

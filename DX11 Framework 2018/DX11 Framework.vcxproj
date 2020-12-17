@@ -404,7 +404,6 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="ApplicationGraphics.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="CursorPoint.h" />
     <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="GroundPlane.h" />
     <ClInclude Include="Imgui\imconfig.h" />

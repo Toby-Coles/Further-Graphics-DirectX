@@ -10,8 +10,7 @@ Application::Application()
 	_pIndexBufferCube = nullptr;
 	_pVertexBufferPyramid = nullptr;
 	_pIndexBufferPyramid = nullptr;
-	cubeView = true;
-	pyramidView = false;
+
 	appGFX = nullptr;
 	skyMap = nullptr;
 	cube = nullptr;
@@ -43,7 +42,7 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 
 	
 
-	//Create the object for the crate cube in the scene (ATTEMPT REPLACE WITH LOAD IN FILE)
+	//Create the object for the crate cube in the scene 
 	cube = new SceneObject(appGFX);
 	cube->LoadModelMesh("Models/cube.obj", appGFX->GetDevice());
 	cube->SetPosition(XMFLOAT3(15.3f, 0.2f, 0.1f));
@@ -51,8 +50,9 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	cube->SetRotation(XMFLOAT3(0.1f, 0.1f, 0.1f));
 	cube->GenerateTexture(L"Textures/Crate_COLOR.dds", appGFX->GetDevice());
 	cube->GenerateTexture(L"Textures/Crate_SPEC.dds", appGFX->GetDevice());
+	worldSceneObjects.push_back(cube);
 
-	//Create the earth object in the scene (ATTEMPT REPLACE WITH LOAD IN FILE)
+	//Create the earth object in the scene
 	earth = new SceneObject(appGFX);
 	earth->LoadModelMesh("Models/sphere2.obj", appGFX->GetDevice());
 	earth->SetPosition(XMFLOAT3(0.0f, 0.0f, 0.0f));
@@ -60,25 +60,35 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	earth->GenerateTexture(L"Textures/earth_color.dds", appGFX->GetDevice());
 	earth->GenerateTexture(L"Textures/earth_spec.dds", appGFX->GetDevice());
 	earth->GenerateTexture(L"Textures/earth_night.dds", appGFX->GetDevice());
+	worldSceneObjects.push_back(earth);
 
 	ship = new SceneObject(appGFX);
 	ship->LoadModelMesh("Models/userModel.obj", appGFX->GetDevice());
 	ship->SetPosition(XMFLOAT3(0.0f, 0.0f, - 25.0f));
 	ship->SetScale(XMFLOAT3(0.3f, 0.3f, 0.3f));
 	ship->GenerateTexture(L"Textures/shipTex.dss", appGFX->GetDevice());
+	worldSceneObjects.push_back(ship);
 
 	shipPlayer = new SceneObject(appGFX);
 	shipPlayer->LoadModelMesh("Models/userModelRotated.obj", appGFX->GetDevice());
 	shipPlayer->SetPosition(XMFLOAT3(0.0f, 0.0f, 40.0f));
 	shipPlayer->SetScale(XMFLOAT3(0.3f, 0.3f, 0.3f));
 	shipPlayer->GenerateTexture(L"Textures/shipTex.dss", appGFX->GetDevice());
-	
+	worldSceneObjects.push_back(shipPlayer);
 
 	camera2 = new Camera();
 	camera2->SetCameraPosition(XMFLOAT3(0.0f, 0.0f, 15.0f));
 	camera2->LookAt(camera2->GetCameraPosition(), XMFLOAT3(0.0f, 0.0f, 1.0f), camera2->GetCameraUp());
 	camera2->SetLens(90.0f, 1920 / 1080, 0.01f, 1000.0f);
 	camera2->UpdateViewMatrix();
+
+	camera3 = new Camera();
+	camera3->SetCameraPosition(XMFLOAT3(20.0f, 22.0f, 23.0f));
+	camera3->SetLens(90.0f, 1920 / 1080, 0.01f, 1000.0f);
+	camera3->LookAt(XMFLOAT3(20.0f, 22.0f, 23.0f), XMFLOAT3(0.0f, -0.72f, -0.51f), XMFLOAT3(0.51f, 0.68f, 0.5f));
+	//camera3->SetCameraUp(XMFLOAT3(0.51f, 0.68f, -0.5f));
+	camera3->UpdateViewMatrix();
+	//camera right = XMFLOAT3(-0.7, -1, 0.7);
 
 	//Initialise the view matrix for the camera
 	camera1->UpdateViewMatrix();
@@ -93,11 +103,12 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	skyMap->SetRotation(XMFLOAT3(0.0f, 0.0f, 0.0f));
 	skyMap->GenerateTexture(L"Textures/stars_map.dds", appGFX->GetDevice());
 
+	//Creates the ground plane
 	plane = new GroundPlane(appGFX);
 	plane->GeneratePlane(30.0f, 30.0f, 8, 8);
 	plane->SetPosition (XMFLOAT3(0.0f, -10.0f, 0.0f));
 	plane->GenerateTexture(L"Textures/planeSurface.dds", appGFX->GetDevice());
-
+	showGridPlane = false;
 	
 	//Initialise the timer in the program
 	timer = new TimeKeep();
@@ -116,60 +127,11 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 }
 
 
-
-
-
-XMFLOAT3 Application::CalculateNormals(XMFLOAT3 vertex1, XMFLOAT3 vertex2, XMFLOAT3 vertex3)
-{
-	XMFLOAT3 normal;
-
-	//Compute two vectors that lie on the edges
-	float uX = vertex2.x - vertex1.x;
-	float uY = vertex2.y - vertex1.y;
-	float uZ = vertex2.z - vertex1.z;
-
-	float vX = vertex3.x - vertex1.x;
-	float vY = vertex3.y - vertex1.y;
-	float vZ = vertex3.z - vertex1.z;
-
-	XMFLOAT3 u = XMFLOAT3(uX, uY, uZ);
-	XMFLOAT3 v = XMFLOAT3(vX, vY, vZ);
-
-	//Calculate the cross product
-	float crossX = u.y * v.z - u.z * v.y;
-	float crossY = u.z * v.x - u.x * v.z;
-	float crossZ = u.z * v.y - u.y * v.x;
-
-
-	//XMFLOAT3 cross = XMFLOAT3(crossX, crossY, crossZ);
-
-	//Calculate magnitude
-	//float mag1 = sqrt((vertex1.x * vertex1.x) + (vertex2.x * vertex2.x) + (vertex3.x + vertex3.x));
-	//float mag2 = sqrt((vertex1.y * vertex1.y) + (vertex2.y * vertex2.y) + (vertex3.y + vertex3.y));
-	//float mag3 = sqrt((vertex1.z * vertex1.z) + (vertex2.z * vertex2.z) + (vertex3.z + vertex3.z));
-
-	float magnitude = sqrt(((vertex1.x * vertex1.x) + (vertex1.y * vertex1.y) + (vertex1.z * vertex1.z)) + ((vertex2.x * vertex2.x) + (vertex2.y * vertex2.y) + (vertex2.z * vertex2.z)) + ((vertex3.x + vertex3.x) + (vertex3.y + vertex3.y) + (vertex3.z + vertex3.z)));
-	// float magnitude = mag1 + mag2 + mag3;
-
-	 //Normalise result of cross prod
-	float normalisedCrossX = crossX / magnitude;
-	float normalisedCrossY = crossY / magnitude;
-	float normalisedCrossZ = crossZ / magnitude;
-
-	normal = XMFLOAT3(normalisedCrossX, normalisedCrossY, normalisedCrossZ);
-
-	return normal;
-
-
-}
-
-
-
 HRESULT Application::InitVertexBuffer()
 {
 	//GenerateGridPlain(3.0f, 3.0f, 6, 4);
 
-	//Hard coded vertex buffer for a cube - NOT IMPLEMENTED INTO CODE HERE TO DEMONSTRATE UNDERSTANDING AND ABILITY
+	//Hard coded vertex buffer for a cube - NOT IMPLEMENTED INTO SCENE HERE TO DEMONSTRATE UNDERSTANDING AND ABILITY
 	HRESULT hrCube;
 	SimpleVertex verticesCube[] = {
 	
@@ -269,7 +231,7 @@ HRESULT Application::InitVertexBuffer()
 
 HRESULT Application::InitIndexBuffer()
 {
-	//Hard coded index buffers - NOT IMPLEMENTED INTO SCENE HERE TO PROVIDE UNDERSTANDING OF CONCEPT
+	//Hard coded index buffers - NOT IMPLEMENTED INTO SCENE HERE TO DEMONSTRATE UNDERSTANDING AND ABILITY
 	HRESULT hrCube;
 
 	// Create index buffer for Cube
@@ -337,20 +299,21 @@ void Application::Cleanup()
 	if (p_TextureRV) p_TextureRV->Release();
 	if (p_SpecularTexture) p_SpecularTexture->Release();
 	
-	
-	
 }
 
 void Application::Update()
 {
 	appGFX->UpdateLighting();
+
 	// Update our time
 	timer->Tick();
 	float deltaTime = timer->DeltaTime();
+
+	//Updates the rotation values so they are constant
 	rotation += (rotationSpeed * deltaTime);
 	earthRotation += (earthRotationSpeed * deltaTime);
 
-	// HARD CODED SCENE OBJECT IMPLEMENTATION
+	// HARD CODED SCENE OBJECT IMPLEMENTATION - NOT IMPLEMENTED HERE TO SHOW UNDERSTANDING
 	////Scene object creation
 	//sceneObjects.resize(5);
 	//XMMATRIX sol = XMMatrixIdentity();
@@ -373,66 +336,40 @@ void Application::Update()
 	//plane = XMMatrixMultiply(plane, XMMatrixScaling(0.5, 0.5, 0.5) * XMMatrixTranslation(0, 0, 3));
 	//XMStoreFloat4x4(&gridPlane, plane);
 
-	
+	//Sets the EyePosw for rendering to that of the active camera
 	appGFX->SetEyePosW(appGFX->GetCurrentCamera()->GetCameraPosition());
 
-	//Update scene objects
-	cube->Update();
-	earth->Update();
-	earth->SetRotation (XMFLOAT3(0.0f, earthRotation, 0.0f ));
-	shipPlayer->Update();
+	cube->SetRotation(XMFLOAT3(rotation, 0.3f, 0.3f));
 
+	earth->SetRotation (XMFLOAT3(0.0f, earthRotation, 0.0f ));
+
+	//Update Scene Objects
+	for each (SceneObject* object in worldSceneObjects)
+	{
+		object->Update();
+	}
+
+	//Set camera 2/'s position to the ship object with a reletive offset
 	camera2->SetPosition(
 		shipPlayer->GetPosition().x + offset.x,
 		shipPlayer->GetPosition().y + offset.y,
 		shipPlayer->GetPosition().z + offset.z );
-	
 
-
-	
+	//Rotates the ship thats flying around earth
 	ship->SetRotation(XMFLOAT3(0.0f, rotation, 0.0f));
-	
-	ship->Update();
-	
-	
+
+	//Constantly sets the skymaps position reletive to the active camera to give the illusion of it never moving
 	skyMap->SetPosition(appGFX->GetCurrentCamera()->GetCameraPosition()); 
-	
 	skyMap->Update();
+
 	plane->Update();
 
-	cube->SetRotation(XMFLOAT3(rotation, 0.3f, 0.3f));
 	isWireFrame = appGFX->UpdateWireFrame();
 
-	//Switch between pyramids and cubes
-	/*if (GetAsyncKeyState(VK_F3) && cubeView == false)
-	{
-		UINT stride = sizeof(SimpleVertex);
-		UINT offset = 0;
-
-		appGFX->SetIndexBuffer(_pIndexBufferCube);
-		appGFX->SetVertexBuffer(_pVertexBufferCube);
-		cubeView = true;
-		pyramidView = false;
-	}
-	if (GetAsyncKeyState(VK_F4) && pyramidView == false)
-	{
-		UINT stride = sizeof(SimpleVertex);
-		UINT offset = 0;
-
-		appGFX->SetIndexBuffer(_pIndexBufferPyramid);
-		appGFX->SetVertexBuffer(_pIndexBufferPyramid);
-
-		pyramidView = true;
-		cubeView = false;
-	}*/
-	
-
-
-	camera2->UpdateViewMatrix();
-	//Update camera controll input polling
-	
+	//Updates all camera control inputs
 	UpdateCameraControlls(deltaTime);
 
+	//Updates ship control inputs
 	UpdateShipControlls(deltaTime);
 	
 }
@@ -502,45 +439,20 @@ void Application::UpdateCameraControlls(float deltaTime)
 	if (GetAsyncKeyState('2')) appGFX->SetCamera(camera2);
 	appGFX->SetEyePosW(camera2->GetCameraPosition());
 
-	// ================= Mouse Movement ================= //
-	POINT current_mouse_pos = {};
-	::GetCursorPos(&current_mouse_pos);
+	if (GetAsyncKeyState('3')) appGFX->SetCamera(camera3);
+	appGFX->SetEyePosW(camera3->GetCameraPosition());
 
-	if (isFirstMouseMove)
-	{
-		isFirstMouseMove = false;
-		m_old_mouse_position = CursorPoint(current_mouse_pos.x, current_mouse_pos.y);
-	}
-
-	if (current_mouse_pos.x!=m_old_mouse_position.m_x || current_mouse_pos.y != m_old_mouse_position.m_y  )
-	{
-		//MOUSE MOVEMENT OCCURRED
-		OnMouseMove(CursorPoint(current_mouse_pos.x = m_old_mouse_position.m_x, current_mouse_pos.y - m_old_mouse_position.m_y));
-	}
-	m_old_mouse_position = CursorPoint(current_mouse_pos.x, current_mouse_pos.y);
-
-
-
-	//if (GetAsyncKeyState(VK_UP) && camera1->momentum > 10)
-	//{
-	//	camera1->momentum += 0.5f * deltaTime;
-	//	camera1->MoveFowardBack(camera1->momentum);
-	//}
-	//else if (camera1->momentum <= 0)
-	//{
-	//	camera1->momentum -= 0.5f * deltaTime;
-	//}
 
 	camera1->UpdateViewMatrix();
+	camera2->UpdateViewMatrix();
+	camera3->UpdateViewMatrix();
 }
 
-void Application::OnMouseMove(const CursorPoint& delta_mouse_pos)
-{
 
-}
 
 void Application::ShowSceneUI()
 {
+	// The definition of the scene UI
 	XMFLOAT3 earthScale = XMFLOAT3(earth->GetScale());
 	XMFLOAT3 earthPosition = XMFLOAT3(earth->GetPosition());
 	XMFLOAT3 shipOrbiterScale = XMFLOAT3(ship->GetScale());
@@ -564,7 +476,53 @@ void Application::ShowSceneUI()
 	ImGui::SliderFloat("Ship Position Y", &shipPosition.y, -50.0f, 50.0f);
 	ImGui::SliderFloat("ship Position Z", &shipPosition.z, -50.0f, 50.0f);
 
+	ImGui::Text("Grid Plane");
+	if (ImGui::Button("Show Grid Plane"))
+	{
+		if (showGridPlane == false)
+		{
+			showGridPlane = true;
+		}
+		else
+		{
+			showGridPlane = false;
+		}
+	}
+
+	XMFLOAT3 planeScale = plane->GetScale();
+
+
+	ImGui::SliderFloat("Grid Plane Scale X", &planeScale.x, 0.0f, 50.0f);
+	
+	ImGui::SliderFloat("Grid Plane Scale Z", &planeScale.z, 0.0f, 50.0f);
 	ImGui::End();
+
+	plane->SetScale(planeScale);
+	ImGui::Begin("Controls");
+	ImGui::Text("===/ Camera \===");
+	ImGui::Text("W: Fly Fowards");
+	ImGui::Text("A: Fly Left");
+	ImGui::Text("S: Fly Backwards");
+	ImGui::Text("D: Fly Right");
+	ImGui::Text("Q: Rotate Left");
+	ImGui::Text("E: Rotate Right");
+	ImGui::Text("R: Pitch Up");
+	ImGui::Text("F: Pitch Down");
+	ImGui::Text("===/ Switch Camera \===");
+	ImGui::Text("1: Flying Camera");
+	ImGui::Text("2: Third Person follow");
+	ImGui::Text("3: Top-Down Camera");
+	ImGui::Text("F2: Wireframe");
+	ImGui::Text("Z: Flashlight (SpotLight)");
+	ImGui::Text("===/ Ship Controls \===");
+	ImGui::Text("I: Forwards");
+	ImGui::Text("K: Backwards");
+	ImGui::Text("J: Left");
+	ImGui::Text("L: Right");
+	
+	ImGui::End();
+
+	//Sets the data that may have been altered by the UI
 	earth->SetScale(earthScale);
 	earth->SetPosition(earthPosition);
 	ship->SetScale(shipOrbiterScale);
@@ -585,17 +543,22 @@ void Application::Draw()
 
 	appGFX->SetWireFrame(isWireFrame);
 
-	cube->Draw();
-	earth->Draw();
-	ship->Draw();
-	shipPlayer->Draw();
-	plane->Draw(plane->GetPlaneVb(), plane->GetPlaneIb(), plane->GetPlaneIndexCount());
+	for each (SceneObject* object in worldSceneObjects)
+	{
+		object->Draw();
+	}
+
+	if (showGridPlane)
+	{
+		plane->Draw(plane->GetPlaneVb(), plane->GetPlaneIb(), plane->GetPlaneIndexCount());
+
+	}
+
 	appGFX->RunLightingControls();
 
 	//Set the rasterizer state to draw the textures on the inside of the model for the skybox
 
 	appGFX->SetSkyboxRasterizerState(true);
-	
 	
 
 	appGFX->SetPixelShader(appGFX->GetSkyboxPixelShader());
@@ -635,26 +598,7 @@ void Application::Draw()
 			_pImmediateContext->DrawIndexed(18, 0, 0);
 		}
 	}*/
-	//////////////////////////////////////////////////////////////////////////////////
-	////Draw Grid plane
-	//UINT stride = sizeof(SimpleVertex);
-	//UINT offset = 0;
-	//_pImmediateContext->IASetIndexBuffer(_pIndexBufferGrid, DXGI_FORMAT_R16_UINT, 0);
-	//_pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBufferGrid, &stride, &offset);
-	//Draw the plane
- /*   world = XMLoadFloat4x4(&gridPlane);
-	cb.mWorld = XMMatrixTranspose(world);
-	_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
-	_pImmediateContext->DrawIndexed(96, 0, 0);*/
-	/*for (int i = 0; i < 100; i++)
-	{
-		world = XMLoadFloat4x4(&asteroidBelt[i]);
-		cb.mWorld = XMMatrixTranspose(world);
-		_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
-		_pImmediateContext->DrawIndexed(36, 0, 0);
-	}*/
-	// Present our back buffer to our front buffer
 
 	
 }

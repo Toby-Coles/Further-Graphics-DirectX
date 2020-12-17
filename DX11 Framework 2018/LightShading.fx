@@ -46,7 +46,7 @@ void ProcessSpotLight(Material material, SpotLight light, float3 pos, float3 nor
 
     //distance from surface to light.
     float d = length(lightVec);
-
+    
     // Range test.
     if (d > light.Range)
         return;
@@ -79,9 +79,9 @@ void ProcessSpotLight(Material material, SpotLight light, float3 pos, float3 nor
     // Scale by spotlight factor and attenuate.
     float att = spot / dot(light.Attenuation, float3(1.0f, d, d * d));
 
-    ambient *= spot;
-    diffuse *= att;
-    spec *= att;
+    //ambient *= spot;
+    //diffuse *= att;
+    //spec *= att;
 
 
 }
